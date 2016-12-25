@@ -1,0 +1,31 @@
+{
+    "name" : "Bookmark",
+    "identifier" : "com.phantomtype.sketchplugin.bookmark",
+    "version" : "1.0",
+    "description" : "Sketch Plugin for bookmark.",
+    "authorEmail" : "yusuke.kokubo@phantomtype.com",
+    "author" : "Yusuke Kokubo",
+    "commands" : [
+    {
+      "script" : "bookmark.js",
+      "handler" : "onBookmarkRead",
+      "shortcut" : "",
+      "name" : "read",
+      "identifier" : "read"
+    },
+    {
+      "script" : "bookmark.js",
+      "handler" : "onBookmarkSave",
+      "shortcut" : "",
+      "name" : "write",
+      "identifier" : "write"
+    },
+    {
+      "script" : "bookmark.js",
+      "handler" : "getBookmarks",
+      "shortcut" : "",
+      "name" : "bookmarks",
+      "identifier" : "bookmarks"
+    }
+  ]
+}
