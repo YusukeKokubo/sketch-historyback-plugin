@@ -2,7 +2,31 @@
 var pageNameKey = "com.phantomtype.sketch.abbookmark.pageName";
 var artboardIndexKey = "com.phantomtype.sketch.abbookmark.artboardIndex";
 
-function onBookmarkRead(context) {
+function onRead1(context) {
+  onBookmarkRead(context, 1);
+}
+
+function onRead2(context) {
+  onBookmarkRead(context, 2);
+}
+
+function onRead3(context) {
+  onBookmarkRead(context, 3);
+}
+
+function onSave1(context) {
+  onBookmarkSave(context, 1);
+}
+
+function onSave2(context) {
+  onBookmarkSave(context, 2);
+}
+
+function onSave3(context) {
+  onBookmarkSave(context, 3);
+}
+
+function onBookmarkRead(context, index) {
   var sketch = context.api();
   var doc = sketch.selectedDocument;
 
@@ -12,7 +36,7 @@ function onBookmarkRead(context) {
 
   doc.sketchObject.setCurrentPage(page.sketchObject);
 
-  var artboardIndex = sketch.settingForKey(artboardIndexKey);
+  var artboardIndex = sketch.settingForKey(settingKey(context, artboardIndexKey, index));
   var artboard = getArtboardByIndex(page, artboardIndex);
   artboard.select();
   doc.centerOnLayer(artboard);
@@ -20,7 +44,7 @@ function onBookmarkRead(context) {
   sketch.message(page.name + ": " + artboard.name + " load");
 };
 
-function onBookmarkSave(context) {
+function onBookmarkSave(context, index) {
   var sketch = context.api();
   var doc = sketch.selectedDocument;
   var page = doc.selectedPage;
@@ -28,18 +52,26 @@ function onBookmarkSave(context) {
   sketch.setSettingForKey(pageNameKey, page.name);
 
   var artboard = getSelectedArtboard(page);
-  sketch.setSettingForKey(artboardIndexKey, artboard.index);
+  sketch.setSettingForKey(settingKey(context, artboardIndexKey, index), artboard.index);
 
   sketch.message(page.name + ": " + artboard.name + " saved");
 }
 
-function getBookmarks(context) {
+function getBookmarks(context, index) {
   var sketch = context.api();
   var doc = sketch.selectedDocument;
   var page = doc.selectedPage;
 
-  var pageName = sketch.settingForKey(pageNameKey);
+  var pageName = sketch.settingForKey(settingKey(context, pageNameKey, index));
   sketch.message(pageName);
+}
+
+function settingKey(context, key, index) {
+  var sketch = context.api();
+  var doc = sketch.selectedDocument;
+  var fileName = doc.sketchObject.publisherFileName();
+
+  return key + "." + fileName + "." + index;
 }
 
 function getIndexOfPage(doc, pageName) {
@@ -70,6 +102,8 @@ function getArtboardByIndex(page, index) {
   return r;
 }
 
+// onSave1(context);
+
 // onBookmarkSave(context);
 // onBookmarkRead(context);
 
@@ -79,3 +113,5 @@ function getArtboardByIndex(page, index) {
 // var ab = getArtboardByIndex(page, 2);
 // log(ab.name);
 // ab.select();
+
+// log(settingKey(context, pageNameKey, 0));

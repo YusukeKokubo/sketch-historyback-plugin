@@ -8,22 +8,50 @@
     "commands" : [
     {
       "script" : "bookmark.js",
-      "handler" : "onBookmarkRead",
-      "shortcut" : "",
-      "name" : "read",
-      "identifier" : "read"
+      "handler" : "onRead1",
+      "shortcut" : "cmd control j",
+      "name" : "read1",
+      "identifier" : "read1"
     },
     {
       "script" : "bookmark.js",
-      "handler" : "onBookmarkSave",
-      "shortcut" : "",
-      "name" : "write",
-      "identifier" : "write"
+      "handler" : "onRead2",
+      "shortcut" : "cmd control k",
+      "name" : "read2",
+      "identifier" : "read2"
+    },
+    {
+      "script" : "bookmark.js",
+      "handler" : "onRead3",
+      "shortcut" : "cmd control l",
+      "name" : "read3",
+      "identifier" : "read3"
+    },
+    {
+      "script" : "bookmark.js",
+      "handler" : "onSave1",
+      "shortcut" : "cmd shift j",
+      "name" : "write1",
+      "identifier" : "write1"
+    },
+    {
+      "script" : "bookmark.js",
+      "handler" : "onSave2",
+      "shortcut" : "cmd shift k",
+      "name" : "write2",
+      "identifier" : "write2"
+    },
+    {
+      "script" : "bookmark.js",
+      "handler" : "onSave3",
+      "shortcut" : "cmd shift l",
+      "name" : "write3",
+      "identifier" : "write3"
     },
     {
       "script" : "bookmark.js",
       "handler" : "getBookmarks",
-      "shortcut" : "",
+      "shortcut" : "cmd control x",
       "name" : "bookmarks",
       "identifier" : "bookmarks"
     }
