@@ -42,6 +42,27 @@ function onGoBack(context) {
   var doc = sketch.selectedDocument;
   var page = doc.selectedPage;
 
+  var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
+  var position = sketch.settingForKey(positionKey) - 1 || 0;
+  log(">>> go back");
+  log(position);
+  if (position <= 0) return;
+
+  var pageIndexKey = artboardChangedHistoryKey + ".pageIndex." + position;
+  var pageIndex = sketch.settingForKey(pageIndexKey);
+  log(pageIndex);
+
+  var artboardIndexKey = artboardChangedHistoryKey + ".artboardIndex." + position;
+  var artboardIndex = sketch.settingForKey(artboardIndexKey);
+  log(artboardIndex);
+  log("<<<");
+
+  openArtboard(doc, pageIndex, artboardIndex);
+
+  sketch.setSettingForKey("com.phantomtype.sketch.abbookmark.saving", "saving");
+
+  sketch.setSettingForKey(positionKey, position);
+
   sketch.message(page.name);
 }
 
@@ -62,6 +83,15 @@ function settingKey(document, key, index) {
   }
 
   return key + "." + fileName + "." + index;
+}
+
+function openArtboard(doc, pageIndex, artboardIndex) {
+  var page = doc.pages[pageIndex];
+  doc.sketchObject.setCurrentPage(page.sketchObject);
+
+  var artboard = getArtboardByIndex(page, artboardIndex);
+  artboard.select();
+  doc.centerOnLayer(artboard);
 }
 
 function getSelectedArtboard(page) {
@@ -105,6 +135,11 @@ function toSketchObject(object) {
 
 function onArtboadChanged(context) {
   var sketch = context.api();
+  var saving = sketch.settingForKey("com.phantomtype.sketch.abbookmark.saving");
+  if (saving == "saving") {
+    sketch.setSettingForKey("com.phantomtype.sketch.abbookmark.saving", null);
+    return;
+  }
 
   var action = context.actionContext;
   var ab = action.newArtboard;
@@ -113,7 +148,7 @@ function onArtboadChanged(context) {
   var abIndex = getIndexOf(page.layers(), ab);
   var pageIndex = getIndexOf(doc.pages(), page);
 
-  log("*** onArtboadChanged ***");
+  log(">>> onArtboadChanged ***");
   log(ab.name());
   log(page.name());
   log(ab.objectID());
@@ -123,6 +158,7 @@ function onArtboadChanged(context) {
   var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
   var position = sketch.settingForKey(positionKey) || 0;
   log(position);
+  log("<<<")
 
   var pageIndexKey = artboardChangedHistoryKey + ".pageIndex." + position;
   sketch.setSettingForKey(pageIndexKey, pageIndex);
