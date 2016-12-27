@@ -7,6 +7,14 @@
     "author" : "Yusuke Kokubo",
     "commands" : [
     {
+      "script": "bookmark.js",
+      "handlers": {
+        "actions": {
+          "ArtboardChanged.finish": "onArtboadChanged"
+        }
+      },
+    },
+    {
       "script" : "bookmark.js",
       "handler" : "onRead1",
       "shortcut" : "cmd control j",

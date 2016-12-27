@@ -1,6 +1,7 @@
 // var pageIndexKey = "com.phantomtype.sketch.abbookmark.pageIndex";
 var pageNameKey = "com.phantomtype.sketch.abbookmark.pageName";
 var artboardIndexKey = "com.phantomtype.sketch.abbookmark.artboardIndex";
+var artboardChangedHistory = "com.phantomtype.sketch.abbookmark.artboardChangedHistory";
 
 function onRead1(context) {
   onBookmarkRead(context, 1);
@@ -100,6 +101,28 @@ function getArtboardByIndex(page, index) {
     }
   });
   return r;
+}
+
+function onArtboadChanged(context) {
+  var sketch = context.api();
+  // var doc_s = sketch.selectedDocument;
+  // var page = doc.selectedPage;
+
+  var action = context.actionContext;
+  var ab = action.newArtboard;
+  var doc = action.document;
+
+  log("*******************")
+  log(context.actionContext.wrapperMappings)
+  // log(doc);
+  // log(page);
+  // log(ab);
+  log(ab.name());
+  log(doc.currentPage().name());
+  // log(doc_s);
+  // doc.pages().forEach(function(p, i) {
+  //   log(p.sketchObject);
+  // });
 }
 
 // onSave1(context);
