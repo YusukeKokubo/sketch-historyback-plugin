@@ -16,52 +16,44 @@
     },
     {
       "script" : "bookmark.js",
-      "handler" : "onRead1",
-      "shortcut" : "cmd control j",
-      "name" : "read1",
-      "identifier" : "read1"
+      "handler" : "onBookmarkLoad",
+      "shortcut" : "option control b",
+      "name" : "Load",
+      "identifier" : "bookmarkLoad"
     },
     {
       "script" : "bookmark.js",
-      "handler" : "onRead2",
-      "shortcut" : "cmd control k",
-      "name" : "read2",
-      "identifier" : "read2"
+      "handler" : "onBookmarkSave",
+      "shortcut" : "option control d",
+      "name" : "Save",
+      "identifier" : "bookmarkSave"
     },
     {
       "script" : "bookmark.js",
-      "handler" : "onRead3",
-      "shortcut" : "cmd control l",
-      "name" : "read3",
-      "identifier" : "read3"
+      "handler" : "onGoBack",
+      "shortcut" : "cmd control [",
+      "name" : "back",
+      "identifier" : "back"
     },
     {
       "script" : "bookmark.js",
-      "handler" : "onSave1",
-      "shortcut" : "cmd shift j",
-      "name" : "write1",
-      "identifier" : "write1"
+      "handler" : "onGoForward",
+      "shortcut" : "cmd control ]",
+      "name" : "forward",
+      "identifier" : "forward"
     },
-    {
-      "script" : "bookmark.js",
-      "handler" : "onSave2",
-      "shortcut" : "cmd shift k",
-      "name" : "write2",
-      "identifier" : "write2"
-    },
-    {
-      "script" : "bookmark.js",
-      "handler" : "onSave3",
-      "shortcut" : "cmd shift l",
-      "name" : "write3",
-      "identifier" : "write3"
-    },
-    {
-      "script" : "bookmark.js",
-      "handler" : "getBookmarks",
-      "shortcut" : "cmd control x",
-      "name" : "bookmarks",
-      "identifier" : "bookmarks"
-    }
-  ]
+  ],
+  "menu": {
+    "items": [
+      {
+        "title": "Bookmark",
+        "items": [
+          "bookmarkSave",
+          "bookmarkLoad"
+        ]
+      },
+      "back",
+      "forward"
+    ]
+  }
 }
