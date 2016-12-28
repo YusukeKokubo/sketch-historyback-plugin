@@ -49,15 +49,12 @@ function onGoBack(context) {
   log(">>> go back");
   if (position <= 0) {
     log("skip back");
-    sketch.message("No history");
+    sketch.message("No more history");
     return;
   }
-
-  var pageIndexKey = artboardChangedHistoryKey + ".pageIndex." + position;
-  var pageIndex = sketch.settingForKey(pageIndexKey);
-
-  var artboardIndexKey = artboardChangedHistoryKey + ".artboardIndex." + position;
-  var artboardIndex = sketch.settingForKey(artboardIndexKey);
+  var history = loadArtboardHistry(sketch, doc, position);
+  var pageIndex = history["pageIndex"];
+  var artboardIndex = history["artboardIndex"];
 
   log({pageIndex, artboardIndex, position});
 
@@ -90,8 +87,9 @@ function settingKey(document, key, index) {
   } else {
     fileName = document.publisherFileName();
   }
-
-  return key + "." + fileName + "." + index;
+  var result = key + "." + fileName + "." + index;
+  log(result);
+  return result;
 }
 
 function openArtboard(doc, pageIndex, artboardIndex) {
@@ -183,4 +181,14 @@ function saveArtboardHistry(sketch, doc, pageIndex, artboardIndex, position) {
 
   var artboardIndexKey = settingKey(doc, artboardChangedHistoryArtboardIndexKey, position);
   sketch.setSettingForKey(artboardIndexKey, artboardIndex);
+}
+
+function loadArtboardHistry(sketch, doc, position) {
+  var pageIndexKey = settingKey(doc, artboardChangedHistoryPageIndexKey, position);
+  var pageIndex = sketch.settingForKey(pageIndexKey);
+
+  var artboardIndexKey = settingKey(doc, artboardChangedHistoryArtboardIndexKey, position);
+  var artboardIndex = sketch.settingForKey(artboardIndexKey);
+
+  return {pageIndex, artboardIndex};
 }
