@@ -1,10 +1,9 @@
-// var pageIndexKey = "com.phantomtype.sketch.abbookmark.pageIndex";
-var pageIndexKey = "com.phantomtype.sketch.abbookmark.pageIndex";
-var artboardIndexKey = "com.phantomtype.sketch.abbookmark.artboardIndex";
-var artboardChangedHistoryKey = "com.phantomtype.sketch.abbookmark.artboardChangedHistory";
-var artboardChangedHistoryPageIndexKey = artboardChangedHistoryKey + ".pageIndex";
-var artboardChangedHistoryArtboardIndexKey = artboardChangedHistoryKey + ".artboardIndex";
-var artboardCurrentPositionKey = "com.phantomtype.sketch.abbookmark.artboardCurrentPosition";
+var keyID = "com.phantomtype.sketch.artboard-warker";
+var pageIndexKey = keyID + ".pageIndex";
+var artboardIndexKey = keyID + "artboardIndex";
+var artboardChangedHistoryPageIndexKey = keyID + ".artboardChangedHistory.pageIndex";
+var artboardChangedHistoryArtboardIndexKey = keyID + ".artboardChangedHistory.artboardIndex";
+var artboardCurrentPositionKey = keyID + "artboardCurrentPosition";
 
 function onBookmarkLoad(context) {
   var sketch = context.api();
