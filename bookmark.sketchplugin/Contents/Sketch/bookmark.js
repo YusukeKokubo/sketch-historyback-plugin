@@ -4,6 +4,7 @@ var artboardIndexKey = keyID + "artboardIndex";
 var artboardChangedHistoryPageIndexKey = keyID + ".artboardChangedHistory.pageIndex";
 var artboardChangedHistoryArtboardIndexKey = keyID + ".artboardChangedHistory.artboardIndex";
 var artboardCurrentPositionKey = keyID + "artboardCurrentPosition";
+var changeIgnoredKey = keyID + ".saving";
 
 function onBookmarkLoad(context) {
   var sketch = context.api();
@@ -44,10 +45,37 @@ function onGoBack(context) {
   var page = doc.selectedPage;
 
   var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
-  var position = sketch.settingForKey(positionKey) - 1 || 0;
-  log(">>> go back");
+  var position = sketch.settingForKey(positionKey) || 0;
+
+  log(">>> go BACK");
+  var result = goHistory(sketch, doc, page, position - 1);
+  log("<<<");
+
+  if (result) sketch.setSettingForKey(positionKey, position - 1); // decrement position
+
+  sketch.message(page.name);
+}
+
+function onGoForward(context) {
+  var sketch = context.api();
+  var doc = sketch.selectedDocument;
+  var page = doc.selectedPage;
+
+  var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
+  var position = sketch.settingForKey(positionKey) || 0;
+
+  log(">>> go FORWARD");
+  var result = goHistory(sketch, doc, page, position + 1);
+  log("<<<");
+
+  if (result) sketch.setSettingForKey(positionKey, position + 1); // increment position
+
+  sketch.message(page.name);
+}
+
+function goHistory(sketch, doc, page, position) {
   if (position <= 0) {
-    log("skip back");
+    log("skip ");
     sketch.message("No more history");
     return;
   }
@@ -58,24 +86,12 @@ function onGoBack(context) {
   log({pageIndex, artboardIndex, position});
 
   if (pageIndex == null || artboardIndex == null) {
-    log("skip back because index is null");
+    log("skip because index is null");
+    return false;
   } else {
-    sketch.setSettingForKey("com.phantomtype.sketch.abbookmark.saving", "saving");
-    openArtboard(doc, pageIndex, artboardIndex);
+    openArtboard(sketch, doc, pageIndex, artboardIndex, true);
+    return true;
   }
-  log("<<<");
-
-  sketch.setSettingForKey(positionKey, position); // decrement position
-
-  sketch.message(page.name);
-}
-
-function onGoforward(context) {
-  var sketch = context.api();
-  var doc = sketch.selectedDocument;
-  var page = doc.selectedPage;
-
-  sketch.message(page.name);
 }
 
 function settingKey(document, key, index) {
@@ -90,11 +106,16 @@ function settingKey(document, key, index) {
   return result;
 }
 
-function openArtboard(doc, pageIndex, artboardIndex) {
+function openArtboard(sketch, doc, pageIndex, artboardIndex, lockSaving) {
   var page = doc.pages[pageIndex];
   doc.sketchObject.setCurrentPage(page.sketchObject);
 
   var artboard = getArtboardByIndex(page, artboardIndex);
+
+  if (lockSaving) {
+    sketch.setSettingForKey(settingKey(doc, changeIgnoredKey, 0), "saving");
+  }
+
   artboard.select();
   doc.centerOnLayer(artboard);
 }
@@ -142,22 +163,23 @@ function onArtboadChanged(context) {
   log(">>> onArtboadChanged ***");
 
   var sketch = context.api();
-  var saving = sketch.settingForKey("com.phantomtype.sketch.abbookmark.saving");
+  var action = context.actionContext;
+  var doc = action.document;
+
+  var savingKey = settingKey(doc, changeIgnoredKey, 0);
+  var saving = sketch.settingForKey(savingKey);
   if (saving == "saving") {
-    sketch.setSettingForKey("com.phantomtype.sketch.abbookmark.saving", null);
+    sketch.setSettingForKey(savingKey, null);
     log("skip save");
     return;
   }
 
-  var action = context.actionContext;
   var artboard = action.oldArtboard;
-
   if (artboard == null) {
     log("skip save");
     return;
   }
 
-  var doc = action.document;
   var page = doc.currentPage();
   var artboardIndex = getIndexOf(page.layers(), artboard);
   var pageIndex = getIndexOf(doc.pages(), page);
