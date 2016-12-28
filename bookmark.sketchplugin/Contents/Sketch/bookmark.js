@@ -21,7 +21,7 @@ function onBookmarkLoad(context) {
   artboard.select();
   doc.centerOnLayer(artboard);
 
-  sketch.message(page.name + ": " + artboard.name + " load");
+  sketch.message(page.name + " / " + artboard.name + " - load");
 };
 
 function onBookmarkSave(context) {
@@ -36,7 +36,7 @@ function onBookmarkSave(context) {
   var artboard = getSelectedArtboard(page);
   sketch.setSettingForKey(settingKey(doc, artboardIndexKey, index), artboard.index);
 
-  sketch.message(page.name + ": " + artboard.name + " saved");
+  sketch.message(page.name + " / " + artboard.name + " - saved");
 }
 
 function onGoBack(context) {
@@ -48,12 +48,13 @@ function onGoBack(context) {
   var position = sketch.settingForKey(positionKey) || 0;
 
   log(">>> go BACK");
-  var result = goHistory(sketch, doc, page, position - 1);
+  var artboard = goHistory(sketch, doc, page, position - 1);
   log("<<<");
 
-  if (result) sketch.setSettingForKey(positionKey, position - 1); // decrement position
-
-  sketch.message(page.name);
+  if (artboard) {
+    sketch.setSettingForKey(positionKey, position - 1); // decrement position
+    sketch.message(page.name + " / " + artboard.name + " - open");
+  }
 }
 
 function onGoForward(context) {
@@ -65,12 +66,13 @@ function onGoForward(context) {
   var position = sketch.settingForKey(positionKey) || 0;
 
   log(">>> go FORWARD");
-  var result = goHistory(sketch, doc, page, position + 1);
+  var artboard = goHistory(sketch, doc, page, position + 1);
   log("<<<");
 
-  if (result) sketch.setSettingForKey(positionKey, position + 1); // increment position
-
-  sketch.message(page.name);
+  if (artboard) {
+    sketch.setSettingForKey(positionKey, position + 1); // increment position
+    sketch.message(page.name + " / " + artboard.name + " - open");
+  }
 }
 
 function goHistory(sketch, doc, page, position) {
@@ -87,10 +89,9 @@ function goHistory(sketch, doc, page, position) {
 
   if (pageIndex == null || artboardIndex == null) {
     log("skip because index is null");
-    return false;
+    return null;
   } else {
-    openArtboard(sketch, doc, pageIndex, artboardIndex, true);
-    return true;
+    return openArtboard(sketch, doc, pageIndex, artboardIndex, true);
   }
 }
 
@@ -118,6 +119,8 @@ function openArtboard(sketch, doc, pageIndex, artboardIndex, lockSaving) {
 
   artboard.select();
   doc.centerOnLayer(artboard);
+
+  return artboard;
 }
 
 function getSelectedArtboard(page) {
