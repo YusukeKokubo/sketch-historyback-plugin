@@ -65,7 +65,6 @@ function onGoBack(context) {
   }
   log("<<<");
 
-  saveArtboardHistry(sketch, doc, null, null, position); // delete old history
   sketch.setSettingForKey(positionKey, position); // decrement position
 
   sketch.message(page.name);
