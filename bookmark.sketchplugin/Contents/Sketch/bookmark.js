@@ -131,6 +131,7 @@ function currentPosition(context) {
   var count = sketch.settingForKey(countKey) || 0;
 
   log({position, count});
+  logAll(sketch, doc);
   sketch.message("position: " + position + ", count: " + count);
 }
 
