@@ -1,6 +1,6 @@
 var keyID = "com.phantomtype.sketch.artboard-warker";
-var pageIndexKey = keyID + ".pageIndex";
-var artboardIndexKey = keyID + "artboardIndex";
+var bookmarkPageIndexKey = keyID + ".pageIndex";
+var bookmarkArtboardIndexKey = keyID + "artboardIndex";
 var artboardChangedHistoryPageIndexKey = keyID + ".artboardChangedHistory.pageIndex";
 var artboardChangedHistoryArtboardIndexKey = keyID + ".artboardChangedHistory.artboardIndex";
 var artboardCurrentPositionKey = keyID + "artboardCurrentPosition";
@@ -150,13 +150,13 @@ function saveBookmark(sketch, doc, indexes) {
   var pageIndex = indexes["pageIndex"]
   var artboardIndex = indexes["artboardIndex"]
 
-  sketch.setSettingForKey(settingKey(doc, pageIndexKey, 1), pageIndex);
-  sketch.setSettingForKey(settingKey(doc, artboardIndexKey, 1), artboardIndex);
+  sketch.setSettingForKey(settingKey(doc, bookmarkPageIndexKey, 1), pageIndex);
+  sketch.setSettingForKey(settingKey(doc, bookmarkArtboardIndexKey, 1), artboardIndex);
 }
 
 function loadBookmark(sketch, doc) {
-  var pageIndex = sketch.settingForKey(settingKey(doc, pageIndexKey, 1));
-  var artboardIndex = sketch.settingForKey(settingKey(doc, artboardIndexKey, 1));
+  var pageIndex = sketch.settingForKey(settingKey(doc, bookmarkPageIndexKey, 1));
+  var artboardIndex = sketch.settingForKey(settingKey(doc, bookmarkArtboardIndexKey, 1));
 
   return {pageIndex, artboardIndex};
 }
