@@ -157,18 +157,6 @@ function goHistory(sketch, doc, page, position) {
   }
 }
 
-function settingKey(document, key, index) {
-  var fileName = "";
-  if (document.sketchObject) {
-    fileName = document.sketchObject.publisherFileName();
-  } else {
-    fileName = document.publisherFileName();
-  }
-  var result = key + "." + fileName + "." + index;
-  log(result);
-  return result;
-}
-
 function openArtboard(sketch, doc, pageIndex, artboardIndex, lockSaving) {
   var page = doc.pages[pageIndex];
   doc.sketchObject.setCurrentPage(page.sketchObject);
@@ -244,6 +232,18 @@ function incrementHistoryCount(sketch, doc) {
 //
 // Layer 2: Functions
 //
+
+function settingKey(document, key, index) {
+    var fileName = "";
+    if (document.sketchObject) {
+        fileName = document.sketchObject.publisherFileName();
+    } else {
+        fileName = document.publisherFileName();
+    }
+    var result = key + "." + fileName + "." + index;
+    log(result);
+    return result;
+}
 
 function getSelectedArtboard(page) {
   var r = null;
