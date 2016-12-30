@@ -34,7 +34,7 @@ function onBookmarkSave(context) {
 
   var artboard = getSelectedArtboard(page);
   if (artboard == null) {
-      sketch.alert("Please select a Artboard.");
+      sketch.alert("Please select a Artboard.", "Bookmark save");
       return;
   }
 
