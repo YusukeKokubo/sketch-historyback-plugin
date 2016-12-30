@@ -7,6 +7,10 @@ var artboardCurrentPositionKey = keyID + "artboardCurrentPosition";
 var artboardChangeHistoriesCountKey = keyID + "artboardChangeHistoriesCount";
 var changeIgnoredKey = keyID + ".saving";
 
+//
+// Layer 0: Presentations
+//
+
 function onBookmarkLoad(context) {
   var sketch = context.api();
   var doc = sketch.selectedDocument;
@@ -140,6 +144,10 @@ function currentPosition(context) {
   sketch.message("position: " + position + ", count: " + count);
 }
 
+//
+// Layer 1: Verbs
+//
+
 function goHistory(sketch, doc, page, position) {
   var history = loadArtboardHistry(sketch, doc, position);
   var pageIndex = history["pageIndex"];
@@ -184,6 +192,28 @@ function openArtboard(sketch, doc, pageIndex, artboardIndex, lockSaving) {
   return artboard;
 }
 
+function saveArtboardHistry(sketch, doc, pageIndex, artboardIndex, position) {
+    var pageIndexKey = settingKey(doc, artboardChangedHistoryPageIndexKey, position);
+    sketch.setSettingForKey(pageIndexKey, pageIndex);
+
+    var artboardIndexKey = settingKey(doc, artboardChangedHistoryArtboardIndexKey, position);
+    sketch.setSettingForKey(artboardIndexKey, artboardIndex);
+}
+
+function loadArtboardHistry(sketch, doc, position) {
+    var pageIndexKey = settingKey(doc, artboardChangedHistoryPageIndexKey, position);
+    var pageIndex = sketch.settingForKey(pageIndexKey);
+
+    var artboardIndexKey = settingKey(doc, artboardChangedHistoryArtboardIndexKey, position);
+    var artboardIndex = sketch.settingForKey(artboardIndexKey);
+
+    return {pageIndex, artboardIndex};
+}
+
+//
+// Layer 2: Functions
+//
+
 function getSelectedArtboard(page) {
   var r = null;
   page.selectedLayers.iterateWithFilter("isArtboard", function(a) {
@@ -226,22 +256,4 @@ function toSketchObject(object) {
   } else {
     return object;
   }
-}
-
-function saveArtboardHistry(sketch, doc, pageIndex, artboardIndex, position) {
-  var pageIndexKey = settingKey(doc, artboardChangedHistoryPageIndexKey, position);
-  sketch.setSettingForKey(pageIndexKey, pageIndex);
-
-  var artboardIndexKey = settingKey(doc, artboardChangedHistoryArtboardIndexKey, position);
-  sketch.setSettingForKey(artboardIndexKey, artboardIndex);
-}
-
-function loadArtboardHistry(sketch, doc, position) {
-  var pageIndexKey = settingKey(doc, artboardChangedHistoryPageIndexKey, position);
-  var pageIndex = sketch.settingForKey(pageIndexKey);
-
-  var artboardIndexKey = settingKey(doc, artboardChangedHistoryArtboardIndexKey, position);
-  var artboardIndex = sketch.settingForKey(artboardIndexKey);
-
-  return {pageIndex, artboardIndex};
 }
