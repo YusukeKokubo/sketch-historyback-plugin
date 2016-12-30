@@ -90,7 +90,7 @@ function onGoBack(context) {
   } else {
     openArtboard(sketch, doc, indexes, true);
     decrementCurrentPosition(sketch, doc);
-    sketch.message(page.name + " / " + artboard.name + " - open");
+    sketch.message("open");
   }
   log("<<<");
 
