@@ -139,8 +139,7 @@ function currentPosition(context) {
 //
 
 function logAll(sketch, doc) {
-    var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
-    var count = sketch.settingForKey(countKey) || 0;
+    var count = getHistoryCount(sketch, doc);
 
     for (var i = 0; i < count; i++) {
         log(loadArtboardHistry(sketch, doc, i));
@@ -256,6 +255,12 @@ function getIndexes(doc, page, artboard) {
 function getCurrentPosition(sketch, doc) {
   var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
   return sketch.settingForKey(positionKey) || 0;
+}
+
+function getHistoryCount(sketch, doc) {
+  var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
+  var count = sketch.settingForKey(countKey) || 0;
+  return count;
 }
 
 function incrementCurrentPosition(sketch, doc) {
