@@ -40,6 +40,57 @@ function onBookmarkSave(context) {
   sketch.message(page.name + " / " + artboard.name + " - saved");
 }
 
+function onArtboadChanged(context) {
+    log(">>> onArtboadChanged ***");
+
+    var sketch = context.api();
+    var action = context.actionContext;
+    var doc = action.document;
+
+    var savingKey = settingKey(doc, changeIgnoredKey, 0);
+    var saving = sketch.settingForKey(savingKey);
+    if (saving == "saving") {
+        sketch.setSettingForKey(savingKey, null);
+        log("skip save");
+        return;
+    }
+
+    var artboard = action.oldArtboard;
+    if (artboard == null) {
+        log("skip save");
+        return;
+    }
+    if (artboard.className() == "MSSymbolMaster") {
+        log("skip save because artboard is Symbol");
+        return;
+    }
+
+    var page = doc.currentPage();
+    var artboardIndex = getIndexOf(page.layers(), artboard);
+    var pageIndex = getIndexOf(doc.pages(), page);
+
+    var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
+    var position = sketch.settingForKey(positionKey) || 0;
+
+    log({artboard, page, artboardIndex, pageIndex, position});
+
+    if (pageIndex < 0 || artboardIndex < 0) {
+        log("save error");
+        log({pageIndex, artboardIndex});
+    } else if (position < 0 || position > 10) {
+        log("skip due to limit");
+    } else {
+        saveArtboardHistry(sketch, doc, pageIndex, artboardIndex, position);
+        sketch.setSettingForKey(positionKey, position + 1);
+
+        var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
+        var count = sketch.settingForKey(countKey) || 0;
+        sketch.setSettingForKey(countKey, count + 1);
+    }
+
+    log("<<<")
+}
+
 function onGoBack(context) {
   var sketch = context.api();
   var doc = sketch.selectedDocument;
@@ -175,57 +226,6 @@ function toSketchObject(object) {
   } else {
     return object;
   }
-}
-
-function onArtboadChanged(context) {
-  log(">>> onArtboadChanged ***");
-
-  var sketch = context.api();
-  var action = context.actionContext;
-  var doc = action.document;
-
-  var savingKey = settingKey(doc, changeIgnoredKey, 0);
-  var saving = sketch.settingForKey(savingKey);
-  if (saving == "saving") {
-    sketch.setSettingForKey(savingKey, null);
-    log("skip save");
-    return;
-  }
-
-  var artboard = action.oldArtboard;
-  if (artboard == null) {
-    log("skip save");
-    return;
-  }
-  if (artboard.className() == "MSSymbolMaster") {
-    log("skip save because artboard is Symbol");
-    return;
-  }
-
-  var page = doc.currentPage();
-  var artboardIndex = getIndexOf(page.layers(), artboard);
-  var pageIndex = getIndexOf(doc.pages(), page);
-
-  var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
-  var position = sketch.settingForKey(positionKey) || 0;
-
-  log({artboard, page, artboardIndex, pageIndex, position});
-
-  if (pageIndex < 0 || artboardIndex < 0) {
-    log("save error");
-    log({pageIndex, artboardIndex});
-  } else if (position < 0 || position > 10) {
-    log("skip due to limit");
-  } else {
-    saveArtboardHistry(sketch, doc, pageIndex, artboardIndex, position);
-    sketch.setSettingForKey(positionKey, position + 1);
-
-    var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
-    var count = sketch.settingForKey(countKey) || 0;
-    sketch.setSettingForKey(countKey, count + 1);
-  }
-
-  log("<<<")
 }
 
 function saveArtboardHistry(sketch, doc, pageIndex, artboardIndex, position) {
