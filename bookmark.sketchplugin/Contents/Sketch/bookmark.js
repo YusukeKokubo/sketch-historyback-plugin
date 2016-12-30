@@ -85,11 +85,8 @@ function onArtboadChanged(context) {
         log("skip due to limit");
     } else {
         saveArtboardHistry(sketch, doc, pageIndex, artboardIndex, position);
-        sketch.setSettingForKey(positionKey, position + 1);
-
-        var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
-        var count = sketch.settingForKey(countKey) || 0;
-        sketch.setSettingForKey(countKey, count + 1);
+        incrementCurrentPosition(sketch, doc);
+        incrementHistoryCount(sketch, doc);
     }
 
     log("<<<")
@@ -208,6 +205,18 @@ function loadArtboardHistry(sketch, doc, position) {
     var artboardIndex = sketch.settingForKey(artboardIndexKey);
 
     return {pageIndex, artboardIndex};
+}
+
+function incrementCurrentPosition(sketch, doc) {
+  var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
+  var position = sketch.settingForKey(positionKey) || 0;
+  sketch.setSettingForKey(positionKey, position + 1);
+}
+
+function incrementHistoryCount(sketch, doc) {
+  var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
+  var count = sketch.settingForKey(countKey) || 0;
+  sketch.setSettingForKey(countKey, count + 1);
 }
 
 //
