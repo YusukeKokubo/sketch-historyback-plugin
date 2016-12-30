@@ -116,7 +116,7 @@ function onGoForward(context) {
   } else {
     openArtboard(sketch, doc, indexes, true);
     incrementCurrentPosition(sketch, doc);
-    sketch.message(page.name + " / " + artboard.name + " - open");
+    sketch.message("open");
   }
   log("<<<");
 }
