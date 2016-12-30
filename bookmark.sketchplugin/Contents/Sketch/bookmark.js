@@ -59,8 +59,8 @@ function onArtboardChanged(context) {
         return;
     }
     var position = getCurrentPosition(sketch, doc);
-    saveArtboard(sketch, doc, action.oldArtboard, position - 1);
-    saveArtboard(sketch, doc, action.newArtboard, position);
+    saveArtboard(sketch, doc, action.oldArtboard, position);
+    saveArtboard(sketch, doc, action.newArtboard, position + 1);
 
     incrementCurrentPosition(sketch, doc);
     incrementHistoryCount(sketch, doc);
