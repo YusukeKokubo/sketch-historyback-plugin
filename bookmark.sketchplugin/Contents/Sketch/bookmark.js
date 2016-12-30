@@ -100,7 +100,7 @@ function onGoBack(context) {
   log("<<<");
 
   if (artboard) {
-    sketch.setSettingForKey(positionKey, position - 1); // decrement position
+    decrementCurrentPosition(sketch, doc);
     sketch.message(page.name + " / " + artboard.name + " - open");
   }
 }
@@ -219,6 +219,12 @@ function incrementCurrentPosition(sketch, doc) {
   var position = getCurrentPosition(sketch, doc);
   var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
   sketch.setSettingForKey(positionKey, position + 1);
+}
+
+function decrementCurrentPosition(sketch, doc) {
+    var position = getCurrentPosition(sketch, doc);
+    var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
+    sketch.setSettingForKey(positionKey, position + -);
 }
 
 function incrementHistoryCount(sketch, doc) {
