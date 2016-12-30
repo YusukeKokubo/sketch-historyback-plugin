@@ -38,7 +38,7 @@ function onBookmarkSave(context) {
       return;
   }
 
-  var indexes = getCurrentIndexes(doc, page, artboard);
+  var indexes = getIndexes(doc, page, artboard);
   log(indexes);
 
   saveBookmark(sketch, doc, indexes);
@@ -58,35 +58,12 @@ function onArtboardChanged(context) {
         log("skip due to history back");
         return;
     }
-
-    var artboard = action.oldArtboard;
-    if (artboard == null) {
-        log("skip save");
-        return;
-    }
-    if (artboard.className() == "MSSymbolMaster") {
-        log("skip save because artboard is Symbol");
-        return;
-    }
-
-    var page = doc.currentPage();
-    var indexes = getCurrentIndexes(doc, page, artboard);
-    var pageIndex = indexes["pageIndex"]
-    var artboardIndex = indexes["artboardIndex"]
     var position = getCurrentPosition(sketch, doc);
+    saveArtboard(sketch, doc, action.oldArtboard, position - 1);
+    saveArtboard(sketch, doc, action.newArtboard, position);
 
-    log({page, artboard, indexes, position});
-
-    if (pageIndex < 0 || artboardIndex < 0) {
-        log("save error");
-        log({pageIndex, artboardIndex});
-    } else if (position < 0 || position > 10) {
-        log("skip due to limit");
-    } else {
-        saveArtboardHistry(sketch, doc, indexes, position);
-        incrementCurrentPosition(sketch, doc);
-        incrementHistoryCount(sketch, doc);
-    }
+    incrementCurrentPosition(sketch, doc);
+    incrementHistoryCount(sketch, doc);
 
     log("<<<")
 }
@@ -193,6 +170,28 @@ function openArtboard(sketch, doc, indexes, lockSaving) {
   return artboard;
 }
 
+function saveArtboard(sketch, doc, artboard, position) {
+  if (position < 0) {
+    log("skip save due to position is " + position);
+    return;
+  }
+  if (artboard == null) {
+    log("skip save due to artboard is null");
+    return;
+  }
+  if (artboard.className() == "MSSymbolMaster") {
+    log("skip save due to artboard is Symbol");
+    return;
+  }
+
+  var page = doc.currentPage();
+  var indexes = getIndexes(doc, page, artboard);
+
+  log({page, artboard, indexes, position});
+
+  saveArtboardHistry(sketch, doc, indexes, position);
+}
+
 function saveArtboardHistry(sketch, doc, indexes, position) {
     var pageIndex = indexes["pageIndex"];
     var artboardIndex = indexes["artboardIndex"];
@@ -225,7 +224,7 @@ function isFromHistoryBack(sketch, doc) {
 
 }
 
-function getCurrentIndexes(doc, page, artboard) {
+function getIndexes(doc, page, artboard) {
   var artboardIndex = null;
   if (artboard.sketchObject) {
     artboardIndex = artboard.index;
