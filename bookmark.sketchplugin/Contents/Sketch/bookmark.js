@@ -93,8 +93,7 @@ function onGoBack(context) {
   var doc = sketch.selectedDocument;
   var page = doc.selectedPage;
 
-  var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
-  var position = sketch.settingForKey(positionKey) || 0;
+  var position = getCurrentPosition(sketch, doc);
 
   log(">>> go BACK");
   var artboard = goHistory(sketch, doc, page, position - 1);
@@ -111,15 +110,14 @@ function onGoForward(context) {
   var doc = sketch.selectedDocument;
   var page = doc.selectedPage;
 
-  var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
-  var position = sketch.settingForKey(positionKey) || 0;
+  var position = getCurrentPosition(sketch, doc);
 
   log(">>> go FORWARD");
   var artboard = goHistory(sketch, doc, page, position + 1);
   log("<<<");
 
   if (artboard) {
-    sketch.setSettingForKey(positionKey, position + 1); // increment position
+    incrementCurrentPosition(sketch, doc);
     sketch.message(page.name + " / " + artboard.name + " - open");
   }
 }
