@@ -51,11 +51,8 @@ function onArtboadChanged(context) {
     var action = context.actionContext;
     var doc = action.document;
 
-    var savingKey = settingKey(doc, changeIgnoredKey, 0);
-    var saving = sketch.settingForKey(savingKey);
-    if (saving == "saving") {
-        sketch.setSettingForKey(savingKey, null);
-        log("skip save");
+    if (isFromHistoryBack(sketch, doc)) {
+        log("skip due to history back");
         return;
     }
 
@@ -72,9 +69,7 @@ function onArtboadChanged(context) {
     var page = doc.currentPage();
     var artboardIndex = getIndexOf(page.layers(), artboard);
     var pageIndex = getIndexOf(doc.pages(), page);
-
-    var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
-    var position = sketch.settingForKey(positionKey) || 0;
+    var position = getCurrentPosition(sketch, doc);
 
     log({artboard, page, artboardIndex, pageIndex, position});
 
@@ -207,9 +202,25 @@ function loadArtboardHistry(sketch, doc, position) {
     return {pageIndex, artboardIndex};
 }
 
-function incrementCurrentPosition(sketch, doc) {
+function isFromHistoryBack() {
+  var savingKey = settingKey(doc, changeIgnoredKey, 0);
+  var saving = sketch.settingForKey(savingKey);
+  if (saving == "saving") {
+    sketch.setSettingForKey(savingKey, null);
+    return true;
+  } else {
+    return false;
+  }
+
+}
+
+function getCurrentPosition(sketch, doc) {
   var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
-  var position = sketch.settingForKey(positionKey) || 0;
+  return sketch.settingForKey(positionKey) || 0;
+}
+
+function incrementCurrentPosition(sketch, doc) {
+  var position = getCurrentPosition((sketch, doc));
   sketch.setSettingForKey(positionKey, position + 1);
 }
 
