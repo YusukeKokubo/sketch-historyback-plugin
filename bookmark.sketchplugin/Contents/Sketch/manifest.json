@@ -10,7 +10,7 @@
       "script": "bookmark.js",
       "handlers": {
         "actions": {
-          "ArtboardChanged.finish": "onArtboadChanged"
+          "ArtboardChanged.finish": "onArtboardChanged"
         }
       },
     },

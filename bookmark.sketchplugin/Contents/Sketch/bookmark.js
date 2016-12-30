@@ -44,7 +44,7 @@ function onBookmarkSave(context) {
   sketch.message(page.name + " / " + artboard.name + " - saved");
 }
 
-function onArtboadChanged(context) {
+function onArtboardChanged(context) {
     log(">>> onArtboadChanged ***");
 
     var sketch = context.api();
