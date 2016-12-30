@@ -145,8 +145,12 @@ function getArtboardByIndex(page, index) {
 
 function getIndexOf(collections, target) {
   var r = -1;
+  log({collections, target});
+  var t = toSketchObject(target);
+  if (t.objectID == undefined) return;
+
   collections.forEach(function(data, i) {
-    if (toSketchObject(data).objectID() == toSketchObject(target).objectID()) {
+    if (toSketchObject(data).objectID() == t.objectID()) {
       r = i;
       return;
     }
