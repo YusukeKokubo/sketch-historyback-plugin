@@ -66,6 +66,8 @@ function onArtboardChanged(context) {
     incrementHistoryCount(sketch, doc);
 
     log("<<<")
+
+    // logAll(sketch, doc);
 }
 
 function onGoBack(context) {
@@ -135,6 +137,15 @@ function currentPosition(context) {
 //
 // Layer 1: Verbs
 //
+
+function logAll(sketch, doc) {
+    var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
+    var count = sketch.settingForKey(countKey) || 0;
+
+    for (var i = 0; i < count; i++) {
+        log(loadArtboardHistry(sketch, doc, i));
+    }
+}
 
 function saveBookmark(sketch, doc, indexes) {
   var pageIndex = indexes["pageIndex"]
