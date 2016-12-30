@@ -14,34 +14,37 @@ var changeIgnoredKey = keyID + ".saving";
 function onBookmarkLoad(context) {
   var sketch = context.api();
   var doc = sketch.selectedDocument;
-  var index = 1;
 
-  var pageIndex = sketch.settingForKey(pageIndexKey);
-  var page = doc.pages[pageIndex];
+  log("<<< Bookmark load ***");
+  var indexes = loadBookmark(sketch, doc);
+  log(indexes);
 
-  doc.sketchObject.setCurrentPage(page.sketchObject);
+  openArtboard(sketch, doc, indexes, false);
 
-  var artboardIndex = sketch.settingForKey(settingKey(doc, artboardIndexKey, index));
-  var artboard = getArtboardByIndex(page, artboardIndex);
-  artboard.select();
-  doc.centerOnLayer(artboard);
-
-  sketch.message(page.name + " / " + artboard.name + " - load");
+  sketch.message("load");
+  log(">>>");
 };
 
 function onBookmarkSave(context) {
   var sketch = context.api();
   var doc = sketch.selectedDocument;
   var page = doc.selectedPage;
-  var index = 1;
-  var pageIndex = getIndexOf(doc.pages, page); // because page.index does not work well
 
-  sketch.setSettingForKey(pageIndexKey, pageIndex);
+  log("<<< Bookmark save ***");
 
   var artboard = getSelectedArtboard(page);
-  sketch.setSettingForKey(settingKey(doc, artboardIndexKey, index), artboard.index);
+  if (artboard == null) {
+      sketch.alert("Please select a Artboard.");
+      return;
+  }
 
-  sketch.message(page.name + " / " + artboard.name + " - saved");
+  var indexes = getCurrentIndexes(doc, page, artboard);
+  log(indexes);
+
+  saveBookmark(sketch, doc, indexes);
+
+  sketch.message("saved");
+  log(">>>");
 }
 
 function onArtboardChanged(context) {
@@ -156,6 +159,21 @@ function currentPosition(context) {
 // Layer 1: Verbs
 //
 
+function saveBookmark(sketch, doc, indexes) {
+  var pageIndex = indexes["pageIndex"]
+  var artboardIndex = indexes["artboardIndex"]
+
+  sketch.setSettingForKey(settingKey(doc, pageIndexKey, 1), pageIndex);
+  sketch.setSettingForKey(settingKey(doc, artboardIndexKey, 1), artboardIndex);
+}
+
+function loadBookmark(sketch, doc) {
+  var pageIndex = sketch.settingForKey(settingKey(doc, pageIndexKey, 1));
+  var artboardIndex = sketch.settingForKey(settingKey(doc, artboardIndexKey, 1));
+
+  return {pageIndex, artboardIndex};
+}
+
 function openArtboard(sketch, doc, indexes, lockSaving) {
   var pageIndex = indexes["pageIndex"];
   var artboardIndex = indexes["artboardIndex"];
@@ -208,8 +226,19 @@ function isFromHistoryBack(sketch, doc) {
 }
 
 function getCurrentIndexes(doc, page, artboard) {
-  var artboardIndex = getIndexOf(page.layers(), artboard);
-  var pageIndex = getIndexOf(doc.pages(), page);
+  var artboardIndex = null;
+  if (artboard.sketchObject) {
+    artboardIndex = artboard.index;
+  } else {
+    artboardIndex = getIndexOf(page.layers(), artboard);
+  }
+
+  var pageIndex = null;
+  if (page.sketchObject) {
+    pageIndex = getIndexOf(doc.pages, page); // because page.index does not work well
+  } else {
+    pageIndex = getIndexOf(doc.pages(), page);
+  }
 
   return {artboardIndex, pageIndex};
 }
