@@ -4,6 +4,7 @@ var artboardIndexKey = keyID + "artboardIndex";
 var artboardChangedHistoryPageIndexKey = keyID + ".artboardChangedHistory.pageIndex";
 var artboardChangedHistoryArtboardIndexKey = keyID + ".artboardChangedHistory.artboardIndex";
 var artboardCurrentPositionKey = keyID + "artboardCurrentPosition";
+var artboardChangeHistoriesCountKey = keyID + "artboardChangeHistoriesCount";
 var changeIgnoredKey = keyID + ".saving";
 
 function onBookmarkLoad(context) {
@@ -75,12 +76,20 @@ function onGoForward(context) {
   }
 }
 
+function currentPosition(context) {
+  var sketch = context.api();
+  var doc = sketch.selectedDocument;
+  var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
+  var position = sketch.settingForKey(positionKey) || 0;
+
+  var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
+  var count = sketch.settingForKey(countKey) || 0;
+
+  log({position, count});
+  sketch.message("position: " + position + ", count: " + count);
+}
+
 function goHistory(sketch, doc, page, position) {
-  if (position <= 0) {
-    log("skip ");
-    sketch.message("No more history");
-    return;
-  }
   var history = loadArtboardHistry(sketch, doc, position);
   var pageIndex = history["pageIndex"];
   var artboardIndex = history["artboardIndex"];
@@ -89,6 +98,7 @@ function goHistory(sketch, doc, page, position) {
 
   if (pageIndex == null || artboardIndex == null) {
     log("skip because index is null");
+    sketch.message("No more history");
     return null;
   } else {
     return openArtboard(sketch, doc, pageIndex, artboardIndex, true);
@@ -140,14 +150,15 @@ function getArtboardByIndex(page, index) {
       return;
     }
   });
+  // r = page.artboards[index];
   return r;
 }
 
 function getIndexOf(collections, target) {
   var r = -1;
-  log({collections, target});
+  // log({collections, target});
   var t = toSketchObject(target);
-  if (t.objectID == undefined) return;
+  if (t.objectID == undefined) return r;
 
   collections.forEach(function(data, i) {
     if (toSketchObject(data).objectID() == t.objectID()) {
@@ -200,9 +211,20 @@ function onArtboadChanged(context) {
 
   log({artboard, page, artboardIndex, pageIndex, position});
 
-  saveArtboardHistry(sketch, doc, pageIndex, artboardIndex, position);
+  if (pageIndex < 0 || artboardIndex < 0) {
+    log("save error");
+    log({pageIndex, artboardIndex});
+  } else if (position < 0 || position > 10) {
+    log("skip due to limit");
+  } else {
+    saveArtboardHistry(sketch, doc, pageIndex, artboardIndex, position);
+    sketch.setSettingForKey(positionKey, position + 1);
 
-  sketch.setSettingForKey(positionKey, position + 1);
+    var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
+    var count = sketch.settingForKey(countKey) || 0;
+    sketch.setSettingForKey(countKey, count + 1);
+  }
+
   log("<<<")
 }
 

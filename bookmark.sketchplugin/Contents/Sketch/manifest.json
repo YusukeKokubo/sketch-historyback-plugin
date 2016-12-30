@@ -42,6 +42,13 @@
       "name" : "forward",
       "identifier" : "forward"
     },
+    {
+      "script" : "bookmark.js",
+      "handler" : "currentPosition",
+      "shortcut" : "cmd control l",
+      "name" : "c",
+      "identifier" : "c"
+    },
   ],
   "menu": {
     "items": [
@@ -53,7 +60,8 @@
         ]
       },
       "back",
-      "forward"
+      "forward",
+      "c"
     ]
   }
 }
