@@ -93,16 +93,25 @@ function onGoBack(context) {
   var doc = sketch.selectedDocument;
   var page = doc.selectedPage;
 
-  var position = getCurrentPosition(sketch, doc);
+  var position = getCurrentPosition(sketch, doc) - 1;
 
   log(">>> go BACK");
-  var artboard = goHistory(sketch, doc, page, position - 1);
-  log("<<<");
+  var indexes = loadArtboardHistry(sketch, doc, position);
+  var pageIndex = indexes["pageIndex"];
+  var artboardIndex = indexes["artboardIndex"];
 
-  if (artboard) {
+  log({indexes, position});
+
+  if (pageIndex == null || artboardIndex == null) {
+    log("skip because index is null");
+    sketch.message("No more history");
+  } else {
+    openArtboard(sketch, doc, indexes, true);
     decrementCurrentPosition(sketch, doc);
     sketch.message(page.name + " / " + artboard.name + " - open");
   }
+  log("<<<");
+
 }
 
 function onGoForward(context) {
@@ -110,16 +119,24 @@ function onGoForward(context) {
   var doc = sketch.selectedDocument;
   var page = doc.selectedPage;
 
-  var position = getCurrentPosition(sketch, doc);
+  var position = getCurrentPosition(sketch, doc) + 1;
 
   log(">>> go FORWARD");
-  var artboard = goHistory(sketch, doc, page, position + 1);
-  log("<<<");
+  var indexes = loadArtboardHistry(sketch, doc, position);
+  var pageIndex = indexes["pageIndex"];
+  var artboardIndex = indexes["artboardIndex"];
 
-  if (artboard) {
+  log({indexes, position});
+
+  if (pageIndex == null || artboardIndex == null) {
+    log("skip because index is null");
+    sketch.message("No more history");
+  } else {
+    openArtboard(sketch, doc, indexes, true);
     incrementCurrentPosition(sketch, doc);
     sketch.message(page.name + " / " + artboard.name + " - open");
   }
+  log("<<<");
 }
 
 function currentPosition(context) {
@@ -139,24 +156,11 @@ function currentPosition(context) {
 // Layer 1: Verbs
 //
 
-function goHistory(sketch, doc, page, position) {
-  var history = loadArtboardHistry(sketch, doc, position);
-  var pageIndex = history["pageIndex"];
-  var artboardIndex = history["artboardIndex"];
-
-  log({pageIndex, artboardIndex, position});
-
-  if (pageIndex == null || artboardIndex == null) {
-    log("skip because index is null");
-    sketch.message("No more history");
-    return null;
-  } else {
-    return openArtboard(sketch, doc, pageIndex, artboardIndex, true);
-  }
-}
-
-function openArtboard(sketch, doc, pageIndex, artboardIndex, lockSaving) {
+function openArtboard(sketch, doc, indexes, lockSaving) {
+  var pageIndex = indexes["pageIndex"];
+  var artboardIndex = indexes["artboardIndex"];
   var page = doc.pages[pageIndex];
+
   doc.sketchObject.setCurrentPage(page.sketchObject);
 
   var artboard = getArtboardByIndex(page, artboardIndex);
@@ -224,7 +228,7 @@ function incrementCurrentPosition(sketch, doc) {
 function decrementCurrentPosition(sketch, doc) {
     var position = getCurrentPosition(sketch, doc);
     var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
-    sketch.setSettingForKey(positionKey, position + -);
+    sketch.setSettingForKey(positionKey, position - 1);
 }
 
 function incrementHistoryCount(sketch, doc) {
