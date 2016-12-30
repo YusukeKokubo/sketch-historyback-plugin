@@ -197,7 +197,9 @@ function saveArtboard(sketch, doc, artboard, position) {
   var page = doc.currentPage();
   var indexes = getIndexes(doc, page, artboard);
   log({page, artboard, indexes, position});
-  if (indexes["pageIndex"] > 0 && indexes["artboardIndex"] > 0) {
+  var pageIndex = indexes["pageIndex"];
+  var artboardIndex = indexes["artboardIndex"];
+  if (pageIndex >= 0 && artboardIndex >= 0) {
     saveArtboardHistry(sketch, doc, indexes, position);
   }
 }
