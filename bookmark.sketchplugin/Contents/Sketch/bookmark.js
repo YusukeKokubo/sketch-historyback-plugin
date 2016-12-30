@@ -134,7 +134,7 @@ function getSelectedArtboard(page) {
 
 function getArtboardByIndex(page, index) {
   var r = null;
-  page.iterateWithFilter("isArtboard", function(a) {
+  page.iterateWithFilter("isArtboard", function(a) { // TODO: Symbol Support. (as for now API don't support)
     if (a.index == index) {
       r = a;
       return;
@@ -184,6 +184,10 @@ function onArtboadChanged(context) {
   var artboard = action.oldArtboard;
   if (artboard == null) {
     log("skip save");
+    return;
+  }
+  if (artboard.className() == "MSSymbolMaster") {
+    log("skip save because artboard is Symbol");
     return;
   }
 
