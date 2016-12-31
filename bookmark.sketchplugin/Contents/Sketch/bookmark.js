@@ -141,10 +141,12 @@ function currentPosition(context) {
 
 function logAll(sketch, doc) {
     var count = getHistoryCount(sketch, doc);
+    log(">>>**************** log *********************")
 
     for (var i = 0; i < count; i++) {
         log(loadArtboardHistry(sketch, doc, i));
     }
+    log("<<<**************** log *********************")
 }
 
 function saveBookmark(sketch, doc, indexes) {
