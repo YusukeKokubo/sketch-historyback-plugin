@@ -62,8 +62,8 @@ function onArtboardChanged(context) {
     saveArtboard(sketch, doc, action.oldArtboard, position);
     saveArtboard(sketch, doc, action.newArtboard, position + 1);
 
-    incrementCurrentPosition(sketch, doc);
-    incrementHistoryCount(sketch, doc);
+    saveCurrentPosition(sketch, doc, position + 1);
+    saveHistoryCount(sketch, doc, position + 1);
 
     log("<<<")
 
@@ -73,7 +73,6 @@ function onArtboardChanged(context) {
 function onGoBack(context) {
   var sketch = context.api();
   var doc = sketch.selectedDocument;
-  var page = doc.selectedPage;
 
   var position = getCurrentPosition(sketch, doc) - 1;
 
@@ -89,7 +88,7 @@ function onGoBack(context) {
     sketch.message("No more history");
   } else {
     openArtboard(sketch, doc, indexes, true);
-    decrementCurrentPosition(sketch, doc);
+    saveCurrentPosition(sketch, doc, position);
     sketch.message("open");
   }
   log("<<<");
@@ -99,7 +98,6 @@ function onGoBack(context) {
 function onGoForward(context) {
   var sketch = context.api();
   var doc = sketch.selectedDocument;
-  var page = doc.selectedPage;
 
   var position = getCurrentPosition(sketch, doc) + 1;
 
@@ -115,7 +113,7 @@ function onGoForward(context) {
     sketch.message("No more history");
   } else {
     openArtboard(sketch, doc, indexes, true);
-    incrementCurrentPosition(sketch, doc);
+    saveCurrentPosition(sketch, doc, position);
     sketch.message("open");
   }
   log("<<<");
@@ -268,22 +266,14 @@ function getHistoryCount(sketch, doc) {
   return count;
 }
 
-function incrementCurrentPosition(sketch, doc) {
-  var position = getCurrentPosition(sketch, doc);
+function saveCurrentPosition(sketch, doc, position) {
   var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
-  sketch.setSettingForKey(positionKey, position + 1);
+  sketch.setSettingForKey(positionKey, position);
 }
 
-function decrementCurrentPosition(sketch, doc) {
-    var position = getCurrentPosition(sketch, doc);
-    var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
-    sketch.setSettingForKey(positionKey, position - 1);
-}
-
-function incrementHistoryCount(sketch, doc) {
+function saveHistoryCount(sketch, doc, position) {
   var countKey = settingKey(doc, artboardChangeHistoriesCountKey, 0);
-  var count = sketch.settingForKey(countKey) || 0;
-  sketch.setSettingForKey(countKey, count + 1);
+  sketch.setSettingForKey(countKey, position);
 }
 
 //
