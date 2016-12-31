@@ -38,4 +38,7 @@ download or git clone from repository to plugin directory of Sketch.
   - You can go back.
 1. push command + ] .
   - You can go forward.
-  
+
+## License
+
+MIT License.
