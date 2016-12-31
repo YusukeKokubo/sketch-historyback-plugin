@@ -1,59 +1,67 @@
 {
-    "name" : "Bookmark",
-    "identifier" : "com.phantomtype.sketchplugin.bookmark",
+    "name" : "Sketch-HBack-Plugin",
+    "identifier" : "com.phantomtype.sketch.hback",
     "version" : "1.0",
-    "description" : "Sketch Plugin for bookmark.",
+    "description" : "Sketch Plugin for history back and forward.",
     "authorEmail" : "yusuke.kokubo@phantomtype.com",
     "author" : "Yusuke Kokubo",
     "commands" : [
     {
-      "script" : "bookmark.js",
-      "handler" : "onRead1",
-      "shortcut" : "cmd control j",
-      "name" : "read1",
-      "identifier" : "read1"
+      "script": "bookmark.js",
+      "handlers": {
+        "actions": {
+          "ArtboardChanged.finish": "onArtboardChanged"
+        }
+      },
     },
     {
       "script" : "bookmark.js",
-      "handler" : "onRead2",
-      "shortcut" : "cmd control k",
-      "name" : "read2",
-      "identifier" : "read2"
+      "handler" : "onBookmarkLoad",
+      "shortcut" : "option control b",
+      "name" : "Load",
+      "identifier" : "bookmarkLoad"
     },
     {
       "script" : "bookmark.js",
-      "handler" : "onRead3",
+      "handler" : "onBookmarkSave",
+      "shortcut" : "option control d",
+      "name" : "Save",
+      "identifier" : "bookmarkSave"
+    },
+    {
+      "script" : "bookmark.js",
+      "handler" : "onGoBack",
+      "shortcut" : "cmd [",
+      "name" : "back",
+      "identifier" : "back"
+    },
+    {
+      "script" : "bookmark.js",
+      "handler" : "onGoForward",
+      "shortcut" : "cmd ]",
+      "name" : "forward",
+      "identifier" : "forward"
+    },
+    {
+      "script" : "bookmark.js",
+      "handler" : "currentPosition",
       "shortcut" : "cmd control l",
-      "name" : "read3",
-      "identifier" : "read3"
+      "name" : "c",
+      "identifier" : "c"
     },
-    {
-      "script" : "bookmark.js",
-      "handler" : "onSave1",
-      "shortcut" : "cmd shift j",
-      "name" : "write1",
-      "identifier" : "write1"
-    },
-    {
-      "script" : "bookmark.js",
-      "handler" : "onSave2",
-      "shortcut" : "cmd shift k",
-      "name" : "write2",
-      "identifier" : "write2"
-    },
-    {
-      "script" : "bookmark.js",
-      "handler" : "onSave3",
-      "shortcut" : "cmd shift l",
-      "name" : "write3",
-      "identifier" : "write3"
-    },
-    {
-      "script" : "bookmark.js",
-      "handler" : "getBookmarks",
-      "shortcut" : "cmd control x",
-      "name" : "bookmarks",
-      "identifier" : "bookmarks"
-    }
-  ]
+  ],
+  "menu": {
+    "items": [
+      {
+        "title": "Bookmark",
+        "items": [
+          "bookmarkSave",
+          "bookmarkLoad"
+        ]
+      },
+      "back",
+      "forward",
+      "c"
+    ]
+  }
 }
