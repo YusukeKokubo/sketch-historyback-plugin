@@ -89,7 +89,7 @@ function onGoBack(context) {
   } else {
     openArtboard(sketch, doc, indexes, true);
     saveCurrentPosition(sketch, doc, position);
-    sketch.message("open");
+    sketch.message(historyInformation(sketch, doc, position));
   }
   log("<<<");
 
@@ -114,7 +114,7 @@ function onGoForward(context) {
   } else {
     openArtboard(sketch, doc, indexes, true);
     saveCurrentPosition(sketch, doc, position);
-    sketch.message("open");
+    sketch.message(historyInformation(sketch, doc, position));
   }
   log("<<<");
 }
@@ -130,12 +130,36 @@ function currentPosition(context) {
 
   log({position, count});
   logAll(sketch, doc);
-  sketch.message("position: " + position + ", count: " + count);
+  sketch.message(historyInformation(sketch, doc, position));
 }
 
 //
 // Layer 1: Verbs
 //
+
+function historyInformation(sketch, doc, position) {
+  var result = "";
+
+  if (position > 0) {
+    var prev = loadArtboard(doc, loadArtboardHistry(sketch, doc, position - 1));
+    result += "<" + (position - 1) + ": " + artboardName(prev["page"], prev["artboard"]);
+  } else {
+    result += "<" + (position - 1) + ": Nor more";
+  }
+
+  result += " - (" + position + ") - "
+
+  var count = getHistoryCount(sketch, doc);
+  if (position < count) {
+    var next = loadArtboard(doc, loadArtboardHistry(sketch, doc, position + 1));
+    result += artboardName(next["page"], next["artboard"]) + ": " + (position + 1) + ">";
+    result += " >> (" + count + ")";
+  } else {
+    result += "No more: " + (position + 1) + ">";
+  }
+
+  return result;
+}
 
 function logAll(sketch, doc) {
     var count = getHistoryCount(sketch, doc);
@@ -162,14 +186,21 @@ function loadBookmark(sketch, doc) {
   return {pageIndex, artboardIndex};
 }
 
-function openArtboard(sketch, doc, indexes, lockSaving) {
+function loadArtboard(doc, indexes) {
   var pageIndex = indexes["pageIndex"];
   var artboardIndex = indexes["artboardIndex"];
   var page = doc.pages[pageIndex];
+  var artboard = getArtboardByIndex(page, artboardIndex);
+
+  return {page, artboard};
+}
+
+function openArtboard(sketch, doc, indexes, lockSaving) {
+  var payload = loadArtboard(doc, indexes);
+  var page = payload["page"];
+  var artboard = payload["artboard"];
 
   doc.sketchObject.setCurrentPage(page.sketchObject);
-
-  var artboard = getArtboardByIndex(page, artboardIndex);
 
   if (lockSaving) {
     sketch.setSettingForKey(settingKey(doc, changeIgnoredKey, 0), "saving");
@@ -178,7 +209,7 @@ function openArtboard(sketch, doc, indexes, lockSaving) {
   artboard.select();
   doc.centerOnLayer(artboard);
 
-  return artboard;
+  return {page, artboard};
 }
 
 function saveArtboard(sketch, doc, artboard, position) {
@@ -279,6 +310,11 @@ function saveHistoryCount(sketch, doc, position) {
 //
 // Layer 2: Functions
 //
+
+function artboardName(page, artboard) {
+  // return page.name + "/" + artboard.name
+  return artboard.name
+}
 
 function settingKey(document, key, index) {
     var fileName = "";
