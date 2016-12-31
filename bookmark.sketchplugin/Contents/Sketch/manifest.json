@@ -1,5 +1,5 @@
 {
-    "name" : "Sketch-HBack-Plugin",
+    "name" : "Sketch HBack",
     "identifier" : "com.phantomtype.sketch.hback",
     "version" : "1.0",
     "description" : "Sketch Plugin for history back and forward.",
@@ -32,22 +32,22 @@
       "script" : "bookmark.js",
       "handler" : "onGoBack",
       "shortcut" : "cmd [",
-      "name" : "back",
+      "name" : "Back",
       "identifier" : "back"
     },
     {
       "script" : "bookmark.js",
       "handler" : "onGoForward",
       "shortcut" : "cmd ]",
-      "name" : "forward",
+      "name" : "Forward",
       "identifier" : "forward"
     },
     {
       "script" : "bookmark.js",
       "handler" : "currentPosition",
       "shortcut" : "cmd control l",
-      "name" : "c",
-      "identifier" : "c"
+      "name" : "Show Histories",
+      "identifier" : "show"
     },
   ],
   "menu": {
@@ -59,9 +59,10 @@
           "bookmarkLoad"
         ]
       },
+      "-",
       "back",
       "forward",
-      "c"
+      "show",
     ]
   }
 }
