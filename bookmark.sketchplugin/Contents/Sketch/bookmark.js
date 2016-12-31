@@ -1,4 +1,4 @@
-var keyID = "com.phantomtype.sketch.artboard-warker";
+var keyID = "com.phantomtype.sketchplugin.hback";
 var bookmarkPageIndexKey = keyID + ".pageIndex";
 var bookmarkArtboardIndexKey = keyID + "artboardIndex";
 var artboardChangedHistoryPageIndexKey = keyID + ".artboardChangedHistory.pageIndex";
