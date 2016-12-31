@@ -144,7 +144,7 @@ function historyInformation(sketch, doc, position) {
     var prev = loadArtboard(doc, loadArtboardHistry(sketch, doc, position - 1));
     result += "<" + (position - 1) + ": " + artboardName(prev["page"], prev["artboard"]);
   } else {
-    result += "<" + (position - 1) + ": Nor more";
+    result += "<" + (position - 1) + ": No more";
   }
 
   result += " - (" + position + ") - "
