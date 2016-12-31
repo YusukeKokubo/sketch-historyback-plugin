@@ -1,7 +1,7 @@
 {
     "name" : "Sketch HBack",
     "identifier" : "com.phantomtype.sketch.hback",
-    "version" : "1.0",
+    "version" : "0.1",
     "description" : "Sketch Plugin for history back and forward.",
     "authorEmail" : "yusuke.kokubo@phantomtype.com",
     "author" : "Yusuke Kokubo",
