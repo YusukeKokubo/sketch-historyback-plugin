@@ -48,26 +48,26 @@ function onBookmarkSave(context) {
 }
 
 function onArtboardChanged(context) {
-    log(">>> onArtboadChanged ***");
+  log(">>> onArtboadChanged ***");
 
-    var sketch = context.api();
-    var action = context.actionContext;
-    var doc = action.document;
+  var sketch = context.api();
+  var action = context.actionContext;
+  var doc = action.document;
 
-    if (isFromHistoryBack(sketch, doc)) {
-        log("skip due to history back");
-        return;
-    }
-    var position = getCurrentPosition(sketch, doc);
-    saveArtboard(sketch, doc, action.oldArtboard, position);
-    saveArtboard(sketch, doc, action.newArtboard, position + 1);
+  if (isFromHistoryBack(sketch, doc)) {
+    log("skip due to history back");
+    return;
+  }
+  var position = getCurrentPosition(sketch, doc);
+  saveArtboard(sketch, doc, action.oldArtboard, position);
+  saveArtboard(sketch, doc, action.newArtboard, position + 1);
 
-    saveCurrentPosition(sketch, doc, position + 1);
-    saveHistoryCount(sketch, doc, position + 1);
+  saveCurrentPosition(sketch, doc, position + 1);
+  saveHistoryCount(sketch, doc, position + 1);
 
-    log("<<<")
+  log("<<<")
 
-    // logAll(sketch, doc);
+  // logAll(sketch, doc);
 }
 
 function onGoBack(context) {
