@@ -1,8 +1,8 @@
 {
-    "name" : "Bookmark",
-    "identifier" : "com.phantomtype.sketchplugin.bookmark",
+    "name" : "Sketch-HBack-Plugin",
+    "identifier" : "com.phantomtype.sketch.hback",
     "version" : "1.0",
-    "description" : "Sketch Plugin for bookmark.",
+    "description" : "Sketch Plugin for history back and forward.",
     "authorEmail" : "yusuke.kokubo@phantomtype.com",
     "author" : "Yusuke Kokubo",
     "commands" : [
