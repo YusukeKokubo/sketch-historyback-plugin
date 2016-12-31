@@ -31,14 +31,14 @@
     {
       "script" : "bookmark.js",
       "handler" : "onGoBack",
-      "shortcut" : "cmd control [",
+      "shortcut" : "cmd [",
       "name" : "back",
       "identifier" : "back"
     },
     {
       "script" : "bookmark.js",
       "handler" : "onGoForward",
-      "shortcut" : "cmd control ]",
+      "shortcut" : "cmd ]",
       "name" : "forward",
       "identifier" : "forward"
     },
