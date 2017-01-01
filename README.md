@@ -4,7 +4,7 @@
 
 ### en
 
-todo...
+A Sketch Plugin for history back and forward. It provides can move artboards easily.
 
 ### ja
 
