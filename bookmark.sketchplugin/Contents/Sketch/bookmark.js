@@ -1,6 +1,4 @@
 var keyID = "com.phantomtype.sketchplugin.hback";
-var bookmarkPageIndexKey = keyID + ".pageIndex";
-var bookmarkArtboardIndexKey = keyID + "artboardIndex";
 var artboardChangedHistoryPageIndexKey = keyID + ".artboardChangedHistory.pageIndex";
 var artboardChangedHistoryArtboardIndexKey = keyID + ".artboardChangedHistory.artboardIndex";
 var artboardCurrentPositionKey = keyID + "artboardCurrentPosition";
@@ -10,42 +8,6 @@ var changeIgnoredKey = keyID + ".saving";
 //
 // Layer 0: Presentations
 //
-
-function onBookmarkLoad(context) {
-  var sketch = context.api();
-  var doc = sketch.selectedDocument;
-
-  log("<<< Bookmark load ***");
-  var indexes = loadBookmark(sketch, doc);
-  log(indexes);
-
-  openArtboard(sketch, doc, indexes, false);
-
-  sketch.message("load");
-  log(">>>");
-};
-
-function onBookmarkSave(context) {
-  var sketch = context.api();
-  var doc = sketch.selectedDocument;
-  var page = doc.selectedPage;
-
-  log("<<< Bookmark save ***");
-
-  var artboard = getSelectedArtboard(page);
-  if (artboard == null) {
-      sketch.alert("Please select a Artboard.", "Bookmark save");
-      return;
-  }
-
-  var indexes = getIndexes(doc, page, artboard);
-  log(indexes);
-
-  saveBookmark(sketch, doc, indexes);
-
-  sketch.message("saved");
-  log(">>>");
-}
 
 function onArtboardChanged(context) {
   log(">>> onArtboadChanged ***");
@@ -169,21 +131,6 @@ function logAll(sketch, doc) {
         log(loadArtboardHistry(sketch, doc, i));
     }
     log("<<<**************** log *********************")
-}
-
-function saveBookmark(sketch, doc, indexes) {
-  var pageIndex = indexes["pageIndex"]
-  var artboardIndex = indexes["artboardIndex"]
-
-  sketch.setSettingForKey(settingKey(doc, bookmarkPageIndexKey, 1), pageIndex);
-  sketch.setSettingForKey(settingKey(doc, bookmarkArtboardIndexKey, 1), artboardIndex);
-}
-
-function loadBookmark(sketch, doc) {
-  var pageIndex = sketch.settingForKey(settingKey(doc, bookmarkPageIndexKey, 1));
-  var artboardIndex = sketch.settingForKey(settingKey(doc, bookmarkArtboardIndexKey, 1));
-
-  return {pageIndex, artboardIndex};
 }
 
 function loadArtboard(doc, indexes) {

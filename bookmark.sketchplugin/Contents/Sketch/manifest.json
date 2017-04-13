@@ -1,7 +1,7 @@
 {
     "name" : "HistoryBack",
     "identifier" : "com.phantomtype.sketch.hback",
-    "version" : "0.1",
+    "version" : "0.2",
     "description" : "Sketch Plugin for history back and forward.",
     "authorEmail" : "yusuke.kokubo@gmail.com",
     "author" : "Yusuke Kokubo",
@@ -12,21 +12,7 @@
         "actions": {
           "ArtboardChanged.finish": "onArtboardChanged"
         }
-      },
-    },
-    {
-      "script" : "bookmark.js",
-      "handler" : "onBookmarkLoad",
-      "shortcut" : "option control b",
-      "name" : "Load",
-      "identifier" : "bookmarkLoad"
-    },
-    {
-      "script" : "bookmark.js",
-      "handler" : "onBookmarkSave",
-      "shortcut" : "option control d",
-      "name" : "Save",
-      "identifier" : "bookmarkSave"
+      }
     },
     {
       "script" : "bookmark.js",
@@ -48,21 +34,13 @@
       "shortcut" : "cmd control l",
       "name" : "Show Histories",
       "identifier" : "show"
-    },
+    }
   ],
   "menu": {
     "items": [
-      {
-        "title": "Bookmark",
-        "items": [
-          "bookmarkSave",
-          "bookmarkLoad"
-        ]
-      },
-      "-",
       "back",
       "forward",
-      "show",
+      "show"
     ]
   }
 }
