@@ -319,9 +319,9 @@ function artboardName(page, artboard) {
 function settingKey(document, key, index) {
     var fileName = "";
     if (document.sketchObject) {
-        fileName = document.sketchObject.publisherFileName();
+        fileName = document.sketchObject.cloudName();
     } else {
-        fileName = document.publisherFileName();
+        fileName = document.cloudName();
     }
     var result = key + "." + fileName + "." + index;
     log(result);
