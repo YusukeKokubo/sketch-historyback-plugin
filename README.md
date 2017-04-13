@@ -12,16 +12,14 @@ Sketchでアートボードをヒストリーバックで移動できるよう�
 
 ## Features
 
-- Artboard bookmark (save / load)
 - Artboard History Back and Forward
 
 ![demo](https://github.com/YusukeKokubo/sketch-hback-plugin/blob/master/hback-demo.gif?raw=true)
 
 ## Requirements
 
-- Sketch 41.2 +
-  - using ArtboardChanged action.
-- macOS Yosemite+
+- Sketch 43+
+- macOS Sierra+
 
 
 ## Install
@@ -38,6 +36,10 @@ download or git clone from repository to plugin directory of Sketch.
   - You can go back.
 1. push command + ] .
   - You can go forward.
+
+## changelog
+
+2017/04/14 - fix for sketch43
 
 ## License
 
