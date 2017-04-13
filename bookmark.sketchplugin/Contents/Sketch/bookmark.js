@@ -20,6 +20,10 @@ function onArtboardChanged(context) {
     log("skip due to history back");
     return;
   }
+  if (action.newArtboard.className() == "MSSymbolMaster") {
+    log("skip due to artboard is Symbol");
+    return;
+  }
   var position = getCurrentPosition(sketch, doc);
   saveArtboard(sketch, doc, action.oldArtboard, position);
   saveArtboard(sketch, doc, action.newArtboard, position + 1);
