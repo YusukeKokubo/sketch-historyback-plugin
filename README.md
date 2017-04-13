@@ -32,9 +32,9 @@ download or git clone from repository to plugin directory of Sketch.
 
 1. open a Sketch document.
 1. artboard changed somethimes.
-1. push command + [ .
+1. press `⌘ + [`
   - You can go back.
-1. push command + ] .
+1. press `⌘ + ]`
   - You can go forward.
 
 ## changelog
