@@ -219,24 +219,6 @@ function isFromHistoryBack(sketch, doc) {
 
 }
 
-function getIndexes(doc, page, artboard) {
-  var artboardIndex = null;
-  if (artboard.sketchObject) {
-    artboardIndex = artboard.index;
-  } else {
-    artboardIndex = getIndexOf(page.layers(), artboard);
-  }
-
-  var pageIndex = null;
-  if (page.sketchObject) {
-    pageIndex = getIndexOf(doc.pages, page); // because page.index does not work well
-  } else {
-    pageIndex = getIndexOf(doc.pages(), page);
-  }
-
-  return {artboardIndex, pageIndex};
-}
-
 function getCurrentPosition(sketch, doc) {
   var positionKey = settingKey(doc, artboardCurrentPositionKey, 0);
   return sketch.settingForKey(positionKey) || 0;
@@ -261,6 +243,25 @@ function saveHistoryCount(sketch, doc, position) {
 //
 // Layer 2: Functions
 //
+
+function getIndexes(doc, page, artboard) {
+    var artboardIndex = null;
+    if (artboard.sketchObject) {
+        artboardIndex = artboard.index;
+    } else {
+        artboardIndex = getIndexOf(page.layers(), artboard);
+    }
+
+    var pageIndex = null;
+    if (page.sketchObject) {
+        pageIndex = getIndexOf(doc.pages, page); // because page.index does not work well
+    } else {
+        pageIndex = getIndexOf(doc.pages(), page);
+    }
+
+    return {artboardIndex, pageIndex};
+}
+
 
 function artboardName(page, artboard) {
   // return page.name + "/" + artboard.name
