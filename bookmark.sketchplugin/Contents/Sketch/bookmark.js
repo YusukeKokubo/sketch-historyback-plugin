@@ -79,7 +79,7 @@ function onGoForward(context) {
     log("<<<");
 }
 
-function currentPosition(context) {
+function showHistories(context) {
     var sketch = context.api();
     var doc = sketch.selectedDocument;
     log(">>> choice History");
@@ -218,7 +218,7 @@ function choiceArtboard(sketch, doc, artboards) {
     });
 
     debug("items", items)
-    var choice = sketch.getSelectionFromUser("count: " + count + ", position: " + position, items, position);
+    var choice = sketch.getSelectionFromUser("count: " + count + ", position: " + position, items, 0);
     debug("choice", choice)
 
     return choice;
