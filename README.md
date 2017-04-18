@@ -1,4 +1,4 @@
-# sketch-hback-plugin
+# sketch-historyback-plugin
 
 ## Description
 
@@ -32,10 +32,8 @@ download or git clone from repository to plugin directory of Sketch.
 
 1. open a Sketch document.
 1. artboard changed somethimes.
-1. press `⌘ + [`
-  - You can go back.
-1. press `⌘ + ]`
-  - You can go forward.
+1. press `⌘ + [` to go back
+1. press `⌘ + ]` to go forward
 
 ## changelog
 
