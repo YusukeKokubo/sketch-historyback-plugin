@@ -12,79 +12,79 @@ var ARTBOARD_KEY = keyID + ".history.artboard";
 //
 
 function onArtboardChanged(context) {
-  log(">>> onArtboadChanged ***");
+    log(">>> onArtboadChanged ***");
 
-  var sketch = context.api();
-  var action = context.actionContext;
-  var doc = action.document;
+    var sketch = context.api();
+    var action = context.actionContext;
+    var doc = action.document;
 
-  if (isFromHistoryBack(sketch, doc)) {
-    log("skip due to history back");
-    return;
-  }
-  var position = getCurrentPosition(sketch, doc);
-  debug("oldArtboard", action.oldArtboard);
-  saveArtboard(sketch, doc, action.oldArtboard, position);
-  debug("newArtboard", action.newArtboard);
-  saveArtboard(sketch, doc, action.newArtboard, position + 1);
+    if (isFromHistoryBack(sketch, doc)) {
+        log("skip due to history back");
+        return;
+    }
+    var position = getCurrentPosition(sketch, doc);
+    debug("oldArtboard", action.oldArtboard);
+    saveArtboard(sketch, doc, action.oldArtboard, position);
+    debug("newArtboard", action.newArtboard);
+    saveArtboard(sketch, doc, action.newArtboard, position + 1);
 
-  saveCurrentPosition(sketch, doc, position + 1);
-  saveHistoryCount(sketch, doc, position + 1);
+    saveCurrentPosition(sketch, doc, position + 1);
+    saveHistoryCount(sketch, doc, position + 1);
 
-  log("<<<")
+    log("<<<")
 }
 
 function onGoBack(context) {
-  var sketch = context.api();
-  var doc = sketch.selectedDocument;
+    var sketch = context.api();
+    var doc = sketch.selectedDocument;
 
-  var position = getCurrentPosition(sketch, doc) - 1;
+    var position = getCurrentPosition(sketch, doc) - 1;
 
-  log(">>> go BACK");
+    log(">>> go BACK");
     var ids = loadArtboardHistory(sketch, doc, position);
     var pageId = ids["pageId"]
     var artboardId = ids["artboardId"]
 
-  if (pageId == null || artboardId == null) {
-    log("skip because id is null");
-    sketch.message("No more history");
-  } else {
-    var payload = findArtboard(doc, ids);
-    openArtboard(sketch, doc, payload["page"], payload["artboard"]);
-    saveCurrentPosition(sketch, doc, position);
-  }
-  log("<<<");
+    if (pageId == null || artboardId == null) {
+        log("skip because id is null");
+        sketch.message("No more history");
+    } else {
+        var payload = findArtboard(doc, ids);
+        openArtboard(sketch, doc, payload["page"], payload["artboard"]);
+        saveCurrentPosition(sketch, doc, position);
+    }
+    log("<<<");
 }
 
 function onGoForward(context) {
-  var sketch = context.api();
-  var doc = sketch.selectedDocument;
+    var sketch = context.api();
+    var doc = sketch.selectedDocument;
 
-  var position = getCurrentPosition(sketch, doc) + 1;
+    var position = getCurrentPosition(sketch, doc) + 1;
 
-  log(">>> go FORWARD");
-  var ids = loadArtboardHistory(sketch, doc, position);
-  var pageId = ids["pageId"]
-  var artboardId = ids["artboardId"]
+    log(">>> go FORWARD");
+    var ids = loadArtboardHistory(sketch, doc, position);
+    var pageId = ids["pageId"]
+    var artboardId = ids["artboardId"]
 
-  if (pageId == null || artboardId == null) {
-    log("skip because index is null");
-    sketch.message("No more history");
-  } else {
-    var payload = findArtboard(doc, ids);
-    openArtboard(sketch, doc, payload["page"], payload["artboard"]);
-    saveCurrentPosition(sketch, doc, position);
-  }
-  log("<<<");
+    if (pageId == null || artboardId == null) {
+        log("skip because index is null");
+        sketch.message("No more history");
+    } else {
+        var payload = findArtboard(doc, ids);
+        openArtboard(sketch, doc, payload["page"], payload["artboard"]);
+        saveCurrentPosition(sketch, doc, position);
+    }
+    log("<<<");
 }
 
 function currentPosition(context) {
-  var sketch = context.api();
-  var doc = sketch.selectedDocument;
-  log(">>> choice History");
+    var sketch = context.api();
+    var doc = sketch.selectedDocument;
+    log(">>> choice History");
 
-  logAll(sketch, doc);
-  log("<<<");
+    logAll(sketch, doc);
+    log("<<<");
 }
 
 //
@@ -117,20 +117,20 @@ function findArtboard(doc, ids) {
 }
 
 function saveArtboard(sketch, doc, artboard, position) {
-  if (position < 0) {
-    log("skip save due to position is " + position);
-    return;
-  }
-  if (artboard == null) {
-    log("skip save due to artboard is null");
-    return;
-  }
+    if (position < 0) {
+        log("skip save due to position is " + position);
+        return;
+    }
+    if (artboard == null) {
+        log("skip save due to artboard is null");
+        return;
+    }
 
-  var page = doc.currentPage();
-  debug("saveHistory", page);
-  if (toSketchObject(artboard).objectID) {
-    saveArtboardHistory(sketch, doc, page, artboard, position)
-  }
+    var page = doc.currentPage();
+    debug("saveHistory", page);
+    if (toSketchObject(artboard).objectID) {
+        saveArtboardHistory(sketch, doc, page, artboard, position)
+    }
 }
 
 function loadArtboardHistory(sketch, doc, position) {
@@ -145,36 +145,36 @@ function loadArtboardHistory(sketch, doc, position) {
 }
 
 function isFromHistoryBack(sketch, doc) {
-  var savingKey = settingKey(doc, SAVING_STATE_KEY, 0);
-  var saving = sketch.settingForKey(savingKey);
-  if (saving == "saving") {
-    sketch.setSettingForKey(savingKey, null);
-    return true;
-  } else {
-    return false;
-  }
+    var savingKey = settingKey(doc, SAVING_STATE_KEY, 0);
+    var saving = sketch.settingForKey(savingKey);
+    if (saving == "saving") {
+        sketch.setSettingForKey(savingKey, null);
+        return true;
+    } else {
+        return false;
+    }
 
 }
 
 function getCurrentPosition(sketch, doc) {
-  var positionKey = settingKey(doc, CURRENT_POSITION_KEY, 0);
-  return sketch.settingForKey(positionKey) || 0;
+    var positionKey = settingKey(doc, CURRENT_POSITION_KEY, 0);
+    return sketch.settingForKey(positionKey) || 0;
 }
 
 function getHistoryCount(sketch, doc) {
-  var countKey = settingKey(doc, COUNT_KEY, 0);
-  var count = sketch.settingForKey(countKey) || 0;
-  return count;
+    var countKey = settingKey(doc, COUNT_KEY, 0);
+    var count = sketch.settingForKey(countKey) || 0;
+    return count;
 }
 
 function saveCurrentPosition(sketch, doc, position) {
-  var positionKey = settingKey(doc, CURRENT_POSITION_KEY, 0);
-  sketch.setSettingForKey(positionKey, position);
+    var positionKey = settingKey(doc, CURRENT_POSITION_KEY, 0);
+    sketch.setSettingForKey(positionKey, position);
 }
 
 function saveHistoryCount(sketch, doc, position) {
-  var countKey = settingKey(doc, COUNT_KEY, 0);
-  sketch.setSettingForKey(countKey, position);
+    var countKey = settingKey(doc, COUNT_KEY, 0);
+    sketch.setSettingForKey(countKey, position);
 }
 
 //
@@ -228,11 +228,11 @@ function getObjectById(collections, pageId) {
 }
 
 function toSketchObject(object) {
-  if (object.sketchObject) {
-    return object.sketchObject;
-  } else {
-    return object;
-  }
+    if (object.sketchObject) {
+        return object.sketchObject;
+    } else {
+        return object;
+    }
 }
 
 //
