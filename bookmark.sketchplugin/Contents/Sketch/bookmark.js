@@ -6,6 +6,7 @@ var SAVING_STATE_KEY = keyID + ".saving";
 var PAGE_KEY = keyID + ".history.page";
 var ARTBOARD_KEY = keyID + ".history.artboard";
 
+var is_debug = true;
 
 //
 // Layer 0: Presentations
@@ -83,7 +84,17 @@ function currentPosition(context) {
     var doc = sketch.selectedDocument;
     log(">>> choice History");
 
-    logAll(sketch, doc);
+    var p = histories(sketch, doc);
+    var ps = p["pages"]
+    var as = p["artboards"]
+
+    var choice = choiceArtboard(sketch, doc, as);
+
+    if (choice[0] == 1000) {
+        var i = choice[1];
+        openArtboard(sketch, doc, ps[i], as[i]);
+        saveCurrentPosition(sketch, doc, i);
+    }
     log("<<<");
 }
 
@@ -177,6 +188,43 @@ function saveHistoryCount(sketch, doc, position) {
     sketch.setSettingForKey(countKey, position);
 }
 
+function histories(sketch, doc) {
+    var count = getHistoryCount(sketch, doc);
+    var position = getCurrentPosition(sketch, doc)
+    var pages = []
+    var artboards = []
+    debug("count, position", {count, position})
+
+    for (var i = 0; i < count; i++) {
+        var ids = loadArtboardHistory(sketch, doc, i);
+        if (ids["pageId"] && ids["artboardId"]) {
+            var payload = findArtboard(doc, ids);
+            pages.push(payload["page"])
+            artboards.push(payload["artboard"])
+        }
+    }
+
+    debug("pages, artboards", {pages, artboards});
+
+    return {pages, artboards}
+}
+
+function choiceArtboard(sketch, doc, artboards) {
+    var count = getHistoryCount(sketch, doc);
+    var position = getCurrentPosition(sketch, doc);
+    var items = [];
+    artboards.forEach(function (data, i) {
+        items.push(i + ": " + data.name());
+    });
+
+    debug("items", items)
+    var choice = sketch.getSelectionFromUser("count: " + count + ", position: " + position, items, position);
+    debug("choice", choice)
+
+    return choice;
+}
+
+
 //
 // Layer 2: Functions
 //
@@ -239,34 +287,8 @@ function toSketchObject(object) {
 // Layer 2: Logging
 //
 
-function logAll(sketch, doc) {
-    var count = getHistoryCount(sketch, doc);
-    var position = getCurrentPosition(sketch, doc)
-    var items = []
-    var payloads = []
-    debug("count, position", {count, position})
-
-    for (var i = 0; i < count; i++) {
-        var ids = loadArtboardHistory(sketch, doc, i);
-        if (ids["pageId"] && ids["artboardId"]) {
-            var payload = findArtboard(doc, ids);
-            payloads.push(payload)
-            items.push(i + ": " + payload["artboard"].name())
-        }
-    }
-    debug("messege", items)
-    var choice = sketch.getSelectionFromUser("", items, position - 1)
-    debug("choice", choice)
-
-    if (choice[0] == 1000) {
-        var i = choice[1];
-        var p = payloads[i];
-        openArtboard(sketch, doc, p["page"], p["artboard"]);
-    }
-}
-
 function debug(msg, body) {
-    if (debug) {
+    if (is_debug) {
         log("***" + msg);
         log(body);
     }
