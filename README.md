@@ -39,7 +39,14 @@ download or git clone from repository to plugin directory of Sketch.
 
 ## changelog
 
-2017/04/14 - fix for sketch43
+#### 2017/04/18 version 0.3
+
+- support Symbol
+- direct jump from histories
+
+#### 2017/04/14 version 0.2
+
+- fix for sketch43
 
 ## License
 
