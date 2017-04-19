@@ -37,6 +37,10 @@ download or git clone from repository to plugin directory of Sketch.
 
 ## changelog
 
+#### 2017/04/19 version 0.3.1
+
+- fixed error
+
 #### 2017/04/18 version 0.3
 
 - support Symbol
