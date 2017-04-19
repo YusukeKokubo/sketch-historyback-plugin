@@ -256,7 +256,7 @@ function getObjectById2(cs, id) {
     debug("cs", {cs, id});
     var r = null;
     cs().forEach(function (data) {
-        if (toSketchObject(data).objectID() == id) {
+        if (String(toSketchObject(data).objectID()) == String(id)) {
             r = data;
             return;
         }
@@ -267,7 +267,7 @@ function getObjectById2(cs, id) {
 function getObjectById(collections, pageId) {
     var r = null;
     collections.forEach(function (data, i) {
-        if (toSketchObject(data).objectID() == pageId) {
+        if (String(toSketchObject(data).objectID()) == String(pageId)) {
             r = data;
             return;
         }
