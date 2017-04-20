@@ -26,14 +26,14 @@ function onArtboardChanged(context) {
         log("skip due to history back");
         return;
     }
-    var position = getCurrentPosition(sketch, doc);
+    var position = getPosition(sketch, doc);
     debug("oldArtboard", action.oldArtboard);
-    saveArtboard(sketch, doc, action.oldArtboard, position);
+    saveHistory(sketch, doc, action.oldArtboard, position);
     debug("newArtboard", action.newArtboard);
-    saveArtboard(sketch, doc, action.newArtboard, position + 1);
+    saveHistory(sketch, doc, action.newArtboard, position + 1);
 
-    saveCurrentPosition(sketch, doc, position + 1);
-    saveHistoryCount(sketch, doc, position + 1);
+    savePosition(sketch, doc, position + 1);
+    saveCount(sketch, doc, position + 1);
 
     log("<<<")
 }
@@ -42,7 +42,7 @@ function onGoBack(context) {
     var sketch = context.api();
     var doc = sketch.selectedDocument;
 
-    var position = getCurrentPosition(sketch, doc) - 1;
+    var position = getPosition(sketch, doc) - 1;
 
     log(">>> go BACK");
     var ids = getHistory(sketch, doc, position);
@@ -55,7 +55,7 @@ function onGoBack(context) {
     } else {
         var payload = findArtboard(doc, ids);
         openArtboard(sketch, doc, payload["page"], payload["artboard"]);
-        saveCurrentPosition(sketch, doc, position);
+        savePosition(sketch, doc, position);
     }
     log("<<<");
 }
@@ -64,7 +64,7 @@ function onGoForward(context) {
     var sketch = context.api();
     var doc = sketch.selectedDocument;
 
-    var position = getCurrentPosition(sketch, doc) + 1;
+    var position = getPosition(sketch, doc) + 1;
 
     log(">>> go FORWARD");
     var ids = getHistory(sketch, doc, position);
@@ -77,7 +77,7 @@ function onGoForward(context) {
     } else {
         var payload = findArtboard(doc, ids);
         openArtboard(sketch, doc, payload["page"], payload["artboard"]);
-        saveCurrentPosition(sketch, doc, position);
+        savePosition(sketch, doc, position);
     }
     log("<<<");
 }
@@ -96,7 +96,7 @@ function showHistories(context) {
     if (choice[0] == 1000) {
         var i = choice[1];
         openArtboard(sketch, doc, ps[i], as[i]);
-        saveCurrentPosition(sketch, doc, i);
+        savePosition(sketch, doc, i);
     }
     log("<<<");
 }
@@ -130,7 +130,7 @@ function findArtboard(doc, ids) {
     return {page, artboard};
 }
 
-function saveArtboard(sketch, doc, artboard, position) {
+function saveHistory(sketch, doc, artboard, position) {
     if (position < 0) {
         log("skip save due to position is " + position);
         return;
@@ -143,7 +143,15 @@ function saveArtboard(sketch, doc, artboard, position) {
     var page = doc.currentPage();
     debug("saveHistory", page);
     if (toSketchObject(artboard).objectID) {
-        saveHistory(sketch, doc, page, artboard, position)
+        var pageKey = settingKey(doc, PAGE_KEY, position);
+        var pid = toSketchObject(page).objectID();
+        debug("pageKey", {pageKey, pid})
+        sketch.setSettingForKey(pageKey, pid);
+
+        var artboardKey = settingKey(doc, ARTBOARD_KEY, position);
+        var aid = toSketchObject(artboard).objectID();
+        debug("artboardKey", {artboardKey, aid})
+        sketch.setSettingForKey(artboardKey, aid);
     }
 }
 
@@ -170,30 +178,30 @@ function isFromHistoryBack(sketch, doc) {
 
 }
 
-function getCurrentPosition(sketch, doc) {
+function getPosition(sketch, doc) {
     var positionKey = settingKey(doc, CURRENT_POSITION_KEY, 0);
     return sketch.settingForKey(positionKey) || 0;
 }
 
-function getHistoryCount(sketch, doc) {
+function getCount(sketch, doc) {
     var countKey = settingKey(doc, COUNT_KEY, 0);
     var count = sketch.settingForKey(countKey) || 0;
     return count;
 }
 
-function saveCurrentPosition(sketch, doc, position) {
+function savePosition(sketch, doc, position) {
     var positionKey = settingKey(doc, CURRENT_POSITION_KEY, 0);
     sketch.setSettingForKey(positionKey, position);
 }
 
-function saveHistoryCount(sketch, doc, position) {
+function saveCount(sketch, doc, position) {
     var countKey = settingKey(doc, COUNT_KEY, 0);
     sketch.setSettingForKey(countKey, position);
 }
 
 function getHistories(sketch, doc) {
-    var count = getHistoryCount(sketch, doc);
-    var position = getCurrentPosition(sketch, doc)
+    var count = getCount(sketch, doc);
+    var position = getPosition(sketch, doc)
     var pages = []
     var artboards = []
     debug("count, position", {count, position})
@@ -213,8 +221,8 @@ function getHistories(sketch, doc) {
 }
 
 function choiceArtboard(sketch, doc, artboards) {
-    var count = getHistoryCount(sketch, doc);
-    var position = getCurrentPosition(sketch, doc);
+    var count = getCount(sketch, doc);
+    var position = getPosition(sketch, doc);
     var items = [];
     artboards.forEach(function (data, i) {
         items.push(i + ": " + data.name());
@@ -225,17 +233,5 @@ function choiceArtboard(sketch, doc, artboards) {
     debug("choice", choice)
 
     return choice;
-}
-
-function saveHistory(sketch, doc, page, artboard, position) {
-    var pageKey = settingKey(doc, PAGE_KEY, position);
-    var pid = toSketchObject(page).objectID();
-    debug("pageKey", {pageKey, pid})
-    sketch.setSettingForKey(pageKey, pid);
-
-    var artboardKey = settingKey(doc, ARTBOARD_KEY, position);
-    var aid = toSketchObject(artboard).objectID();
-    debug("artboardKey", {artboardKey, aid})
-    sketch.setSettingForKey(artboardKey, aid);
 }
 
