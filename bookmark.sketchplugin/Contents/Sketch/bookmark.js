@@ -45,15 +45,13 @@ function onGoBack(context) {
     var doc = sketch.selectedDocument;
 
     var position = getPosition(sketch, doc) - 1;
-    var ids = getHistory(sketch, doc, position);
-    var pageId = ids["pageId"]
-    var artboardId = ids["artboardId"]
+    var {pageId, artboardId} = getHistory(sketch, doc, position);
 
     if (pageId == null || artboardId == null) {
         log("skip because id is null");
         sketch.message("No more history");
     } else {
-        var {page, artboard} = findArtboard(doc, ids);
+        var {page, artboard} = findArtboard(doc, pageId, artboardId);
         openArtboard(sketch, doc, page, artboard);
         savePosition(sketch, doc, position);
     }
@@ -67,15 +65,13 @@ function onGoForward(context) {
     var doc = sketch.selectedDocument;
 
     var position = getPosition(sketch, doc) + 1;
-    var ids = getHistory(sketch, doc, position);
-    var pageId = ids["pageId"]
-    var artboardId = ids["artboardId"]
+    var {pageId, artboardId} = getHistory(sketch, doc, position);
 
     if (pageId == null || artboardId == null) {
         log("skip because index is null");
         sketch.message("No more history");
     } else {
-        var {page, artboard} = findArtboard(doc, ids);
+        var {page, artboard} = findArtboard(doc, pageId, artboardId);
         openArtboard(sketch, doc, page, artboard);
         savePosition(sketch, doc, position);
     }
@@ -88,15 +84,13 @@ function showHistories(context) {
     var sketch = context.api();
     var doc = sketch.selectedDocument;
 
-    var p = getHistories(sketch, doc);
-    var ps = p["pages"]
-    var as = p["artboards"]
+    var {pages, artboards} = getHistories(sketch, doc);
 
-    var choice = choiceArtboard(sketch, doc, as);
+    var choice = choiceArtboard(sketch, doc, artboards);
 
     if (choice[0] == 1000) {
         var i = choice[1];
-        openArtboard(sketch, doc, ps[i], as[i]);
+        openArtboard(sketch, doc, pages[i], artboards[i]);
         savePosition(sketch, doc, i);
     }
     end_debug("showHistories");
@@ -122,9 +116,9 @@ function openArtboard(sketch, doc, page, artboard) {
     return {page, artboard};
 }
 
-function findArtboard(doc, ids) {
-    var page = getObjectById(doc.pages, ids["pageId"])
-    var artboard = getObjectById2(page.sketchObject.layers, ids["artboardId"])
+function findArtboard(doc, pageId, artboardId) {
+    var page = getObjectById(doc.pages, pageId)
+    var artboard = getObjectById2(page.sketchObject.layers, artboardId)
 
     debug("findArtboard", {page, artboard});
 
@@ -208,9 +202,9 @@ function getHistories(sketch, doc) {
     debug("count, position", {count, position})
 
     for (var i = 0; i < count; i++) {
-        var ids = getHistory(sketch, doc, i);
-        if (ids["pageId"] && ids["artboardId"]) {
-            var {page, artboard} = findArtboard(doc, ids);
+        var {pageId, artboardId} = getHistory(sketch, doc, i);
+        if (pageId && artboardId) {
+            var {page, artboard} = findArtboard(doc, pageId, artboardId);
             pages.push(page)
             artboards.push(artboard)
         }
