@@ -45,7 +45,7 @@ function onGoBack(context) {
     var position = getCurrentPosition(sketch, doc) - 1;
 
     log(">>> go BACK");
-    var ids = loadArtboardHistory(sketch, doc, position);
+    var ids = getHistory(sketch, doc, position);
     var pageId = ids["pageId"]
     var artboardId = ids["artboardId"]
 
@@ -67,7 +67,7 @@ function onGoForward(context) {
     var position = getCurrentPosition(sketch, doc) + 1;
 
     log(">>> go FORWARD");
-    var ids = loadArtboardHistory(sketch, doc, position);
+    var ids = getHistory(sketch, doc, position);
     var pageId = ids["pageId"]
     var artboardId = ids["artboardId"]
 
@@ -87,7 +87,7 @@ function showHistories(context) {
     var doc = sketch.selectedDocument;
     log(">>> choice History");
 
-    var p = histories(sketch, doc);
+    var p = getHistories(sketch, doc);
     var ps = p["pages"]
     var as = p["artboards"]
 
@@ -143,18 +143,18 @@ function saveArtboard(sketch, doc, artboard, position) {
     var page = doc.currentPage();
     debug("saveHistory", page);
     if (toSketchObject(artboard).objectID) {
-        saveArtboardHistory(sketch, doc, page, artboard, position)
+        saveHistory(sketch, doc, page, artboard, position)
     }
 }
 
-function loadArtboardHistory(sketch, doc, position) {
+function getHistory(sketch, doc, position) {
     var pageKey = settingKey(doc, PAGE_KEY, position);
     var pageId = sketch.settingForKey(pageKey)
 
     var artboardKey = settingKey(doc, ARTBOARD_KEY, position);
     var artboardId = sketch.settingForKey(artboardKey);
 
-    debug("loadArtboardHistory", {pageId, artboardId});
+    debug("getHistory", {pageId, artboardId});
     return {pageId, artboardId};
 }
 
@@ -191,7 +191,7 @@ function saveHistoryCount(sketch, doc, position) {
     sketch.setSettingForKey(countKey, position);
 }
 
-function histories(sketch, doc) {
+function getHistories(sketch, doc) {
     var count = getHistoryCount(sketch, doc);
     var position = getCurrentPosition(sketch, doc)
     var pages = []
@@ -199,7 +199,7 @@ function histories(sketch, doc) {
     debug("count, position", {count, position})
 
     for (var i = 0; i < count; i++) {
-        var ids = loadArtboardHistory(sketch, doc, i);
+        var ids = getHistory(sketch, doc, i);
         if (ids["pageId"] && ids["artboardId"]) {
             var payload = findArtboard(doc, ids);
             pages.push(payload["page"])
@@ -227,7 +227,7 @@ function choiceArtboard(sketch, doc, artboards) {
     return choice;
 }
 
-function saveArtboardHistory(sketch, doc, page, artboard, position) {
+function saveHistory(sketch, doc, page, artboard, position) {
     var pageKey = settingKey(doc, PAGE_KEY, position);
     var pid = toSketchObject(page).objectID();
     debug("pageKey", {pageKey, pid})
