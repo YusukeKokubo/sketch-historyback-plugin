@@ -8,6 +8,9 @@ var ARTBOARD_KEY = keyID + ".history.artboard";
 
 var is_debug = true;
 
+@import "logging.js";
+@import "util.js";
+
 //
 // Layer 0: Presentations
 //
@@ -224,11 +227,6 @@ function choiceArtboard(sketch, doc, artboards) {
     return choice;
 }
 
-
-//
-// Layer 2: Functions
-//
-
 function saveArtboardHistory(sketch, doc, page, artboard, position) {
     var pageKey = settingKey(doc, PAGE_KEY, position);
     var pid = toSketchObject(page).objectID();
@@ -239,58 +237,5 @@ function saveArtboardHistory(sketch, doc, page, artboard, position) {
     var aid = toSketchObject(artboard).objectID();
     debug("artboardKey", {artboardKey, aid})
     sketch.setSettingForKey(artboardKey, aid);
-}
-
-function settingKey(document, key, index) {
-    var fileName = "";
-    if (document.sketchObject) {
-        fileName = document.sketchObject.cloudName();
-    } else {
-        fileName = document.cloudName();
-    }
-    var result = key + "." + fileName + "." + index;
-    return result;
-}
-
-function getObjectById2(cs, id) {
-    debug("cs", {cs, id});
-    var r = null;
-    cs().forEach(function (data) {
-        if (String(toSketchObject(data).objectID()) == String(id)) {
-            r = data;
-            return;
-        }
-    });
-    return r;
-}
-
-function getObjectById(collections, pageId) {
-    var r = null;
-    collections.forEach(function (data, i) {
-        if (String(toSketchObject(data).objectID()) == String(pageId)) {
-            r = data;
-            return;
-        }
-    });
-    return r;
-}
-
-function toSketchObject(object) {
-    if (object.sketchObject) {
-        return object.sketchObject;
-    } else {
-        return object;
-    }
-}
-
-//
-// Layer 2: Logging
-//
-
-function debug(msg, body) {
-    if (is_debug) {
-        log("***" + msg);
-        log(body);
-    }
 }
 
