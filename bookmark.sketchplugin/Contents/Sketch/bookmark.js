@@ -53,8 +53,8 @@ function onGoBack(context) {
         log("skip because id is null");
         sketch.message("No more history");
     } else {
-        var payload = findArtboard(doc, ids);
-        openArtboard(sketch, doc, payload["page"], payload["artboard"]);
+        var {page, artboard} = findArtboard(doc, ids);
+        openArtboard(sketch, doc, page, artboard);
         savePosition(sketch, doc, position);
     }
     end_debug("onGoBack");
@@ -75,8 +75,8 @@ function onGoForward(context) {
         log("skip because index is null");
         sketch.message("No more history");
     } else {
-        var payload = findArtboard(doc, ids);
-        openArtboard(sketch, doc, payload["page"], payload["artboard"]);
+        var {page, artboard} = findArtboard(doc, ids);
+        openArtboard(sketch, doc, page, artboard);
         savePosition(sketch, doc, position);
     }
     end_debug("onGoForward");
@@ -210,9 +210,9 @@ function getHistories(sketch, doc) {
     for (var i = 0; i < count; i++) {
         var ids = getHistory(sketch, doc, i);
         if (ids["pageId"] && ids["artboardId"]) {
-            var payload = findArtboard(doc, ids);
-            pages.push(payload["page"])
-            artboards.push(payload["artboard"])
+            var {page, artboard} = findArtboard(doc, ids);
+            pages.push(page)
+            artboards.push(artboard)
         }
     }
 
