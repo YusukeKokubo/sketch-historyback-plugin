@@ -16,7 +16,7 @@ var is_debug = true;
 //
 
 function onArtboardChanged(context) {
-    log(">>> onArtboadChanged ***");
+    start_debug("onArtboardChanged");
 
     var sketch = context.api();
     var action = context.actionContext;
@@ -35,16 +35,16 @@ function onArtboardChanged(context) {
     savePosition(sketch, doc, position + 1);
     saveCount(sketch, doc, position + 1);
 
-    log("<<<")
+    end_debug("onArtboardChanged");
 }
 
 function onGoBack(context) {
+    start_debug("onGoBack");
+
     var sketch = context.api();
     var doc = sketch.selectedDocument;
 
     var position = getPosition(sketch, doc) - 1;
-
-    log(">>> go BACK");
     var ids = getHistory(sketch, doc, position);
     var pageId = ids["pageId"]
     var artboardId = ids["artboardId"]
@@ -57,16 +57,16 @@ function onGoBack(context) {
         openArtboard(sketch, doc, payload["page"], payload["artboard"]);
         savePosition(sketch, doc, position);
     }
-    log("<<<");
+    end_debug("onGoBack");
 }
 
 function onGoForward(context) {
+    start_debug("onGoForward");
+
     var sketch = context.api();
     var doc = sketch.selectedDocument;
 
     var position = getPosition(sketch, doc) + 1;
-
-    log(">>> go FORWARD");
     var ids = getHistory(sketch, doc, position);
     var pageId = ids["pageId"]
     var artboardId = ids["artboardId"]
@@ -79,13 +79,14 @@ function onGoForward(context) {
         openArtboard(sketch, doc, payload["page"], payload["artboard"]);
         savePosition(sketch, doc, position);
     }
-    log("<<<");
+    end_debug("onGoForward");
 }
 
 function showHistories(context) {
+    start_debug("showHistories");
+
     var sketch = context.api();
     var doc = sketch.selectedDocument;
-    log(">>> choice History");
 
     var p = getHistories(sketch, doc);
     var ps = p["pages"]
@@ -98,7 +99,7 @@ function showHistories(context) {
         openArtboard(sketch, doc, ps[i], as[i]);
         savePosition(sketch, doc, i);
     }
-    log("<<<");
+    end_debug("showHistories");
 }
 
 //
