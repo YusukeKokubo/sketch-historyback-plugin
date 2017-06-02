@@ -1,6 +1,7 @@
 {
     "name" : "HistoryBack",
     "identifier" : "com.phantomtype.sketch.hback",
+    "appcast": "https://api.sketchpacks.com/v1/plugins/com.phantomtype.sketch.hback/appcast",
     "version" : "0.3",
     "description" : "Sketch Plugin for history back and forward.",
     "authorEmail" : "yusuke.kokubo@gmail.com",
